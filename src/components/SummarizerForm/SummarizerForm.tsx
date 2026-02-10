@@ -28,12 +28,13 @@ export default function SummarizerForm() {
     const trimmed = input.trim();
     if (!trimmed) return;
 
-    if (!extractVideoId(trimmed)) {
+    const videoId = extractVideoId(trimmed);
+    if (!videoId) {
       setValidationError('Please enter a valid YouTube URL or video ID.');
       return;
     }
     setValidationError(null);
-    submitUrl(trimmed);
+    submitUrl(videoId);
   };
 
   const displayError = validationError || error;
