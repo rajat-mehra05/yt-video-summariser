@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useRef, useEffect, FormEvent } from 'react';
 import ReactMarkdown from 'react-markdown';
+import { API_SUMMARIZE_ENDPOINT } from '@/constants';
 
 export default function SummarizerForm() {
   const [input, setInput] = useState('');
@@ -29,7 +30,7 @@ export default function SummarizerForm() {
     abortControllerRef.current = abortController;
 
     try {
-      const response = await fetch('/api/summarize', {
+      const response = await fetch(API_SUMMARIZE_ENDPOINT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ videoId: input.trim() }),
@@ -37,11 +38,21 @@ export default function SummarizerForm() {
       });
 
       if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || `Request failed with status ${response.status}`);
+        let errorMessage = `Request failed with status ${response.status}`;
+        try {
+          const data = await response.json();
+          if (data.error) errorMessage = data.error;
+        } catch {
+          // Response wasn't JSON — use the status-based message
+        }
+        throw new Error(errorMessage);
       }
 
-      const reader = response.body!.getReader();
+      if (!response.body) {
+        throw new Error('Response body is empty');
+      }
+
+      const reader = response.body.getReader();
       const decoder = new TextDecoder();
 
       while (true) {

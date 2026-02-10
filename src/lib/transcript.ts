@@ -1,4 +1,5 @@
 import { YouTubeTranscriptApi, TextFormatter } from 'youtube-transcript-api-js';
+import { PREFERRED_LANGUAGE } from '@/constants';
 
 const api = new YouTubeTranscriptApi();
 const formatter = new TextFormatter();
@@ -21,7 +22,7 @@ export async function fetchTranscript(videoId: string): Promise<{
   const ranked = [...manual, ...generated];
 
   // 1. Look for a direct English transcript (manual first, then generated)
-  const englishDirect = ranked.find(t => t.languageCode === 'en');
+  const englishDirect = ranked.find(t => t.languageCode === PREFERRED_LANGUAGE);
   if (englishDirect) {
     const fetched = await englishDirect.fetch();
     return formatResult(fetched);
@@ -30,7 +31,7 @@ export async function fetchTranscript(videoId: string): Promise<{
   // 2. No direct English — pick the best transcript and translate to English
   const translatable = ranked.find(t => t.isTranslatable);
   if (translatable) {
-    const fetched = await translatable.translate('en').fetch();
+    const fetched = await translatable.translate(PREFERRED_LANGUAGE).fetch();
     return formatResult(fetched);
   }
 
