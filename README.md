@@ -48,7 +48,7 @@ ANTHROPIC_TEMPERATURE=0.7
 |---|---|---|---|
 | `ANTHROPIC_API_KEY` | Yes | — | Your Anthropic API key |
 | `ANTHROPIC_MODEL` | No | `claude-sonnet-4-5-20250929` | Claude model to use |
-| `ANTHROPIC_TEMPERATURE` | No | `0.5` | Controls response creativity (0–1) |
+| `ANTHROPIC_TEMPERATURE` | No | `0.7` | Controls response creativity (0–1) |
 
 ### Run the Development Server
 

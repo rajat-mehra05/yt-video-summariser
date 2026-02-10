@@ -1,11 +1,40 @@
 import { NextRequest } from 'next/server';
-import { extractVideoId } from '@/lib/utils';
+import { extractVideoId } from '@/utils/video';
 import { fetchTranscript } from '@/lib/transcript';
-import { anthropic, SYSTEM_PROMPT } from '@/lib/claude';
+import { getAnthropicClient } from '@/lib/claude';
+import { SUMMARIZE_SYSTEM_PROMPT } from '@/prompts/summarize';
+import {
+  RATE_LIMIT_WINDOW_MS,
+  RATE_LIMIT_MAX_REQUESTS,
+  MAX_TRANSCRIPT_LENGTH,
+  DEFAULT_MODEL,
+  DEFAULT_TEMPERATURE,
+  MAX_TOKENS,
+} from '@/constants';
 
 export const runtime = 'nodejs';
 
+const requestLog = new Map<string, number[]>();
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const timestamps = requestLog.get(ip) ?? [];
+  const recent = timestamps.filter((t) => now - t < RATE_LIMIT_WINDOW_MS);
+  recent.push(now);
+  requestLog.set(ip, recent);
+  return recent.length > RATE_LIMIT_MAX_REQUESTS;
+}
+
 export async function POST(request: NextRequest) {
+  const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown';
+
+  if (isRateLimited(ip)) {
+    return Response.json(
+      { error: 'Too many requests. Please try again in a minute.' },
+      { status: 429 }
+    );
+  }
+
   try {
     const body = await request.json();
     const rawInput = body.videoId;
@@ -34,11 +63,20 @@ export async function POST(request: NextRequest) {
 
     const { text: transcriptText } = await fetchTranscript(videoId);
 
-    const response = await anthropic.messages.create({
-      model: process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-5-20250929',
-      max_tokens: 4096,
-      temperature: parseFloat(process.env.ANTHROPIC_TEMPERATURE || '0.5'),
-      system: SYSTEM_PROMPT,
+    if (transcriptText.length > MAX_TRANSCRIPT_LENGTH) {
+      return Response.json(
+        { error: `Transcript is too long (${Math.round(transcriptText.length / 1000)}k chars). Maximum supported length is ${MAX_TRANSCRIPT_LENGTH / 1000}k characters.` },
+        { status: 413 }
+      );
+    }
+
+    const temperature = parseFloat(process.env.ANTHROPIC_TEMPERATURE || String(DEFAULT_TEMPERATURE));
+
+    const response = await getAnthropicClient().messages.create({
+      model: process.env.ANTHROPIC_MODEL || DEFAULT_MODEL,
+      max_tokens: MAX_TOKENS,
+      temperature: isNaN(temperature) ? DEFAULT_TEMPERATURE : Math.min(1, Math.max(0, temperature)),
+      system: SUMMARIZE_SYSTEM_PROMPT,
       messages: [
         {
           role: 'user',
