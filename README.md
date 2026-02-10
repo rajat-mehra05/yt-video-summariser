@@ -1,36 +1,84 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# YT Summarizer
+
+Paste any YouTube link and get an instant AI-powered summary. YT Summarizer extracts video transcripts and uses Claude AI to generate well-structured, readable markdown summaries — streamed to your browser in real time.
+
+## Benefits
+
+- **Instant Summaries** — Get the key points from any YouTube video in seconds instead of watching the full thing.
+- **Streaming Responses** — Summaries appear in real time as they're generated, so you don't have to wait.
+- **Structured Markdown Output** — Every summary includes an overview, key points, notable quotes, and a conclusion.
+- **Smart Transcript Detection** — Automatically picks the best available transcript, prioritizing manual captions and English language.
+- **Flexible URL Input** — Supports full YouTube URLs, short links (`youtu.be`), embed URLs, and raw video IDs.
+
+## Tech Stack
+
+- [Next.js 16](https://nextjs.org) with App Router
+- [React 19](https://react.dev)
+- [TypeScript](https://www.typescriptlang.org)
+- [Tailwind CSS 4](https://tailwindcss.com)
+- [Anthropic SDK](https://docs.anthropic.com) (Claude AI)
+- [react-markdown](https://github.com/remarkjs/react-markdown) for rendering summaries
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- [Node.js](https://nodejs.org) 18.17 or later
+- An [Anthropic API key](https://console.anthropic.com)
+
+### Installation
+
+```bash
+git clone https://github.com/your-username/yt-summarizer.git
+cd yt-summarizer
+npm install
+```
+
+### Environment Setup
+
+Create a `.env.local` file in the project root:
+
+```env
+ANTHROPIC_API_KEY=your_anthropic_api_key_here
+ANTHROPIC_MODEL=claude-sonnet-4-5-20250929
+ANTHROPIC_TEMPERATURE=0.7
+```
+
+| Variable | Required | Default | Description |
+|---|---|---|---|
+| `ANTHROPIC_API_KEY` | Yes | — | Your Anthropic API key |
+| `ANTHROPIC_MODEL` | No | `claude-sonnet-4-5-20250929` | Claude model to use |
+| `ANTHROPIC_TEMPERATURE` | No | `0.5` | Controls response creativity (0–1) |
+
+### Run the Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Build for Production
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm start
+```
 
-## Learn More
+## Usage
 
-To learn more about Next.js, take a look at the following resources:
+1. Paste a YouTube video URL into the input field.
+2. Click **Summarize**.
+3. The AI-generated summary streams in real time with structured sections.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Deployment
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The easiest way to deploy is with [Vercel](https://vercel.com):
 
-## Deploy on Vercel
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Make sure to add your environment variables in the Vercel dashboard under **Settings > Environment Variables**.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## License
+
+This project is licensed under the [MIT License](LICENSE).
