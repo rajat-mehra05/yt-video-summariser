@@ -2,14 +2,6 @@
 
 Paste any YouTube link and get an instant AI-powered summary. YT Summarizer extracts video transcripts and uses Claude AI to generate well-structured, readable markdown summaries — streamed to your browser in real time.
 
-## Benefits
-
-- **Instant Summaries** — Get the key points from any YouTube video in seconds instead of watching the full thing.
-- **Streaming Responses** — Summaries appear in real time as they're generated, so you don't have to wait.
-- **Structured Markdown Output** — Every summary includes an overview, key points, notable quotes, and a conclusion.
-- **Smart Transcript Detection** — Automatically picks the best available transcript, prioritizing manual captions and English language.
-- **Flexible URL Input** — Supports full YouTube URLs, short links (`youtu.be`), embed URLs, and raw video IDs.
-
 ## Tech Stack
 
 - [Next.js 16](https://nextjs.org) with App Router
@@ -78,6 +70,10 @@ The easiest way to deploy is with [Vercel](https://vercel.com):
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
 
 Make sure to add your environment variables in the Vercel dashboard under **Settings > Environment Variables**.
+
+## Contributing
+
+This project is actively evolving, and all contributions are welcome! If you have ideas for new features, improvements, or spot any issues, feel free to [open an issue](https://github.com/rajat-mehra05/yt-summarizer/issues) or submit a pull request. Feedback and suggestions of any kind are greatly appreciated.
 
 ## License
 
