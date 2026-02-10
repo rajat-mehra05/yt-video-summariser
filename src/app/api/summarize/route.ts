@@ -1,7 +1,8 @@
 import { NextRequest } from 'next/server';
 import { extractVideoId } from '@/utils/video';
 import { fetchTranscript } from '@/lib/transcript';
-import { anthropic, SYSTEM_PROMPT } from '@/lib/claude';
+import { getAnthropicClient } from '@/lib/claude';
+import { SUMMARIZE_SYSTEM_PROMPT } from '@/prompts/summarize';
 import {
   RATE_LIMIT_WINDOW_MS,
   RATE_LIMIT_MAX_REQUESTS,
@@ -71,11 +72,11 @@ export async function POST(request: NextRequest) {
 
     const temperature = parseFloat(process.env.ANTHROPIC_TEMPERATURE || String(DEFAULT_TEMPERATURE));
 
-    const response = await anthropic.messages.create({
+    const response = await getAnthropicClient().messages.create({
       model: process.env.ANTHROPIC_MODEL || DEFAULT_MODEL,
       max_tokens: MAX_TOKENS,
       temperature: isNaN(temperature) ? DEFAULT_TEMPERATURE : Math.min(1, Math.max(0, temperature)),
-      system: SYSTEM_PROMPT,
+      system: SUMMARIZE_SYSTEM_PROMPT,
       messages: [
         {
           role: 'user',
