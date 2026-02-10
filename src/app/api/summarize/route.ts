@@ -35,6 +35,13 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  if (!process.env.ANTHROPIC_API_KEY) {
+    return Response.json(
+      { error: 'Service is not configured. Please contact the administrator.' },
+      { status: 500 }
+    );
+  }
+
   try {
     const body = await request.json();
     const rawInput = body.videoId;
@@ -51,13 +58,6 @@ export async function POST(request: NextRequest) {
       return Response.json(
         { error: 'Invalid YouTube video ID or URL. Please provide a valid video ID or YouTube URL.' },
         { status: 400 }
-      );
-    }
-
-    if (!process.env.ANTHROPIC_API_KEY) {
-      return Response.json(
-        { error: 'Anthropic API key is not configured. Set ANTHROPIC_API_KEY in .env.local.' },
-        { status: 500 }
       );
     }
 
@@ -109,11 +109,11 @@ export async function POST(request: NextRequest) {
       headers: {
         'Content-Type': 'text/plain; charset=utf-8',
         'Cache-Control': 'no-cache, no-transform',
+        'X-Content-Type-Options': 'nosniff',
       },
     });
   } catch (error: unknown) {
     const errorName = error instanceof Error ? error.constructor.name : '';
-    const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
 
     if (errorName === 'InvalidVideoId') {
       return Response.json({ error: 'Invalid video ID format.' }, { status: 400 });
@@ -129,6 +129,6 @@ export async function POST(request: NextRequest) {
     }
 
     console.error('Summarize API error:', error);
-    return Response.json({ error: errorMessage }, { status: 500 });
+    return Response.json({ error: 'An internal error occurred. Please try again later.' }, { status: 500 });
   }
 }

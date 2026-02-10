@@ -1,4 +1,4 @@
-import { YouTubeTranscriptApi, TextFormatter } from 'youtube-transcript-api-js';
+import { YouTubeTranscriptApi, TextFormatter, FetchedTranscript } from 'youtube-transcript-api-js';
 import { PREFERRED_LANGUAGE } from '@/constants';
 
 const api = new YouTubeTranscriptApi();
@@ -40,7 +40,7 @@ export async function fetchTranscript(videoId: string): Promise<{
   return formatResult(fetched);
 }
 
-function formatResult(fetched: { language: string; isGenerated: boolean } & Parameters<typeof formatter.formatTranscript>[0]) {
+function formatResult(fetched: FetchedTranscript) {
   const text = formatter.formatTranscript(fetched);
 
   if (!text || text.trim().length === 0) {
