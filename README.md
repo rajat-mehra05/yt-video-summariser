@@ -69,6 +69,12 @@ npm start
 2. Click **Summarize**.
 3. The AI-generated summary streams in real time with structured sections.
 
+## Known Limitations
+
+> **The live demo may not work reliably.** YouTube aggressively blocks requests from cloud/datacenter IPs (AWS, GCP, Vercel, etc.) with "Sign in to confirm you're not a bot" errors. Free proxy services (including Webshare's free datacenter proxies) are also blocked. Residential proxies (~$6/mo) are the only reliable workaround for cloud deployments.
+>
+> **To try the app, please run it locally** — your home IP is not blocked by YouTube. See [Getting Started](#getting-started) for setup instructions.
+
 ## Deployment
 
 The easiest way to deploy is with [Vercel](https://vercel.com):
@@ -77,17 +83,23 @@ The easiest way to deploy is with [Vercel](https://vercel.com):
 
 Make sure to add your environment variables in the Vercel dashboard under **Settings > Environment Variables**.
 
+> **Note:** For the deployed app to work, you will need a **residential proxy** service. See [FAQ](#faq) below.
+
 ## FAQ
 
 ### Why do I get "YouTube is blocking requests from this server" in production?
 
 YouTube blocks requests from cloud provider IPs (AWS, GCP, Azure, etc.). Since platforms like Vercel run on AWS, YouTube rejects transcript requests from your deployed app. This does not happen during local development because your home IP is not blocked.
 
+### Why don't free proxies work?
+
+YouTube detects and blocks datacenter IPs regardless of the proxy provider. The [youtube-transcript-api maintainer tested multiple providers](https://github.com/jdepoix/youtube-transcript-api/discussions/335) and confirmed that only **residential proxies** reliably bypass YouTube's bot detection. Free datacenter proxies from Webshare, ProxyScrape, and others are all blocked.
+
 ### How do I fix it?
 
-You need a residential proxy service so that requests to YouTube appear to come from a regular home IP instead of a cloud server. This project uses [Webshare](https://www.webshare.io) which offers a free tier:
+You need a **residential** proxy service so that requests to YouTube appear to come from a regular home IP. This project supports [Webshare](https://www.webshare.io) residential proxies (~$6/mo):
 
-1. Sign up at [webshare.io](https://www.webshare.io).
+1. Sign up at [webshare.io](https://www.webshare.io) and purchase a residential proxy plan.
 2. Copy your proxy username and password from the Webshare dashboard.
 3. Add `WEBSHARE_PROXY_USERNAME` and `WEBSHARE_PROXY_PASSWORD` to your environment variables (both in `.env.local` for local testing and in your Vercel project settings for production).
 
