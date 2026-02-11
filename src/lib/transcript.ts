@@ -1,7 +1,15 @@
-import { YouTubeTranscriptApi, TextFormatter, FetchedTranscript } from 'youtube-transcript-api-js';
+import { YouTubeTranscriptApi, WebshareProxyConfig, TextFormatter, FetchedTranscript } from 'youtube-transcript-api-js';
 import { PREFERRED_LANGUAGE } from '@/constants';
 
-const api = new YouTubeTranscriptApi();
+const proxyConfig =
+  process.env.WEBSHARE_PROXY_USERNAME && process.env.WEBSHARE_PROXY_PASSWORD
+    ? new WebshareProxyConfig(
+        process.env.WEBSHARE_PROXY_USERNAME,
+        process.env.WEBSHARE_PROXY_PASSWORD,
+      )
+    : undefined;
+
+const api = new YouTubeTranscriptApi(proxyConfig);
 const formatter = new TextFormatter();
 
 export async function fetchTranscript(videoId: string): Promise<{
