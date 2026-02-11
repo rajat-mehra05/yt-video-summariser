@@ -14,6 +14,18 @@ import {
 
 export const runtime = 'nodejs';
 
+const TRANSCRIPT_ERROR_MAP: Record<string, { message: string; status: number }> = {
+  InvalidVideoId:  { message: 'Invalid video ID format.', status: 400 },
+  VideoUnavailable: { message: 'This video is unavailable or private.', status: 404 },
+  TranscriptsDisabled: { message: 'Transcripts/subtitles are disabled for this video.', status: 404 },
+  NoTranscriptFound: { message: 'No transcript found for this video.', status: 404 },
+  IpBlocked: { message: 'YouTube is blocking requests from this server. This is a known issue with cloud-hosted services.', status: 503 },
+  RequestBlocked: { message: 'YouTube is blocking requests from this server. This is a known issue with cloud-hosted services.', status: 503 },
+  RateLimitExceeded: { message: 'YouTube rate limit exceeded. Please try again later.', status: 429 },
+  AgeRestricted: { message: 'This video is age-restricted and cannot be summarized.', status: 403 },
+  VideoUnplayable: { message: 'This video is unplayable and cannot be summarized.', status: 404 },
+};
+
 const requestLog = new Map<string, number[]>();
 
 function isRateLimited(ip: string): boolean {
@@ -113,19 +125,11 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error: unknown) {
-    const errorName = error instanceof Error ? error.constructor.name : '';
+    const errorName = error instanceof Error ? error.name : '';
+    const knownError = TRANSCRIPT_ERROR_MAP[errorName];
 
-    if (errorName === 'InvalidVideoId') {
-      return Response.json({ error: 'Invalid video ID format.' }, { status: 400 });
-    }
-    if (errorName === 'VideoUnavailable') {
-      return Response.json({ error: 'This video is unavailable or private.' }, { status: 404 });
-    }
-    if (errorName === 'TranscriptsDisabled') {
-      return Response.json({ error: 'Transcripts/subtitles are disabled for this video.' }, { status: 404 });
-    }
-    if (errorName === 'NoTranscriptFound') {
-      return Response.json({ error: 'No transcript found for this video.' }, { status: 404 });
+    if (knownError) {
+      return Response.json({ error: knownError.message }, { status: knownError.status });
     }
 
     console.error('Summarize API error:', error);
