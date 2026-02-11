@@ -125,7 +125,7 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error: unknown) {
-    const errorName = error instanceof Error ? error.constructor.name : '';
+    const errorName = error instanceof Error ? error.name : '';
     const knownError = TRANSCRIPT_ERROR_MAP[errorName];
 
     if (knownError) {
