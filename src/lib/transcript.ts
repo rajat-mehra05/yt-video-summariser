@@ -1,4 +1,4 @@
-import { createYouTubeTranscriptApi, WebshareProxyConfig, TextFormatter, FetchedTranscript } from 'youtube-transcript-api-js';
+import { YouTubeTranscriptApi, WebshareProxyConfig, TextFormatter, FetchedTranscript } from 'youtube-transcript-api-js';
 import { PREFERRED_LANGUAGE } from '@/constants';
 
 const proxyConfig =
@@ -9,7 +9,7 @@ const proxyConfig =
       )
     : undefined;
 
-const api = createYouTubeTranscriptApi(proxyConfig);
+const api = new YouTubeTranscriptApi(proxyConfig);
 const formatter = new TextFormatter();
 
 export async function fetchTranscript(videoId: string): Promise<{
