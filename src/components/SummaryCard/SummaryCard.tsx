@@ -35,6 +35,7 @@ export function SummaryCard({ summary, isLoading, videoId }: SummaryCardProps) {
       document.execCommand('copy');
       document.body.removeChild(textarea);
     }
+    if (copyTimeoutRef.current) clearTimeout(copyTimeoutRef.current);
     setCopied(true);
     copyTimeoutRef.current = setTimeout(() => setCopied(false), 2000);
   }, [summary]);
