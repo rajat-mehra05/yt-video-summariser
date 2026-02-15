@@ -1,13 +1,129 @@
 @import "tailwindcss";
 
 /* ========================
+   Theme Variables
+   ======================== */
+:root {
+  /* Backgrounds */
+  --bg-page: #f8fafc;
+  --bg-card: rgba(255, 255, 255, 0.75);
+  --bg-card-header: #f9fafb;
+  --bg-glass: rgba(255, 255, 255, 0.6);
+  --bg-glass-hover: rgba(255, 255, 255, 0.9);
+  --bg-input: #ffffff;
+  --bg-code: #f3f4f6;
+  --bg-blockquote: linear-gradient(135deg, #eff6ff, #f0f7ff);
+  --bg-error: #fef2f2;
+
+  /* Borders */
+  --border-primary: #e5e7eb;
+  --border-secondary: #f3f4f6;
+  --border-card: rgba(255, 255, 255, 0.8);
+  --border-error: #fecaca;
+  --border-focus: #042e72;
+  --border-hover: #d1d5db;
+
+  /* Text */
+  --text-primary: #111827;
+  --text-secondary: #374151;
+  --text-muted: #6b7280;
+  --text-faint: #9ca3af;
+  --text-error: #dc2626;
+
+  /* Accents */
+  --accent-blue: #24344d;
+  --accent-blue-dark: #18294e;
+  --accent-blue-darker: #2f4fa7;
+  --accent-blue-light: #93c5fd;
+
+  /* Blobs */
+  --blob-1: #dbeafe;
+  --blob-2: #fce7f3;
+  --blob-3: #e0e7ff;
+
+  /* Shadows */
+  --shadow-sm: rgba(0, 0, 0, 0.04);
+  --shadow-md: rgba(0, 0, 0, 0.05);
+  --shadow-lg: rgba(0, 0, 0, 0.08);
+
+  /* Length selector */
+  --ls-bg: #ffffff;
+  --ls-border: #e5e7eb;
+  --ls-hover-border: #93c5fd;
+  --ls-hover-bg: #f0f7ff;
+  --ls-selected-bg: linear-gradient(135deg, #eff6ff, #dbeafe);
+  --ls-selected-border: #3b82f6;
+  --ls-label: #374151;
+  --ls-label-selected: #1d4ed8;
+  --ls-desc: #9ca3af;
+  --ls-desc-selected: #3b82f6;
+
+  /* Action buttons */
+  --action-bg-hover: #f3f4f6;
+  --action-text-hover: #374151;
+}
+
+.dark {
+  --bg-page: #1b1c1f;
+  --bg-card: rgba(30, 41, 59, 0.75);
+  --bg-card-header: #1e293b;
+  --bg-glass: rgba(30, 41, 59, 0.6);
+  --bg-glass-hover: rgba(30, 41, 59, 0.9);
+  --bg-input: #1e293b;
+  --bg-code: #334155;
+  --bg-blockquote: linear-gradient(135deg, #1e293b, #1e3a5f);
+  --bg-error: #451a1a;
+
+  --border-primary: #334155;
+  --border-secondary: #1e293b;
+  --border-card: rgba(51, 65, 85, 0.5);
+  --border-error: #7f1d1d;
+  --border-focus: #3b82f6;
+  --border-hover: #475569;
+
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --text-faint: #64748b;
+  --text-error: #fca5a5;
+
+  --accent-blue: #60a5fa;
+  --accent-blue-dark: #3b82f6;
+  --accent-blue-darker: #2563eb;
+  --accent-blue-light: #1d4ed8;
+
+  --blob-1: rgba(59, 130, 246, 0.15);
+  --blob-2: rgba(236, 72, 153, 0.1);
+  --blob-3: rgba(99, 102, 241, 0.12);
+
+  --shadow-sm: rgba(0, 0, 0, 0.2);
+  --shadow-md: rgba(0, 0, 0, 0.3);
+  --shadow-lg: rgba(0, 0, 0, 0.4);
+
+  --ls-bg: #1e293b;
+  --ls-border: #334155;
+  --ls-hover-border: #3b82f6;
+  --ls-hover-bg: #1e3a5f;
+  --ls-selected-bg: linear-gradient(135deg, #1e293b, #1e3a5f);
+  --ls-selected-border: #3b82f6;
+  --ls-label: #cbd5e1;
+  --ls-label-selected: #60a5fa;
+  --ls-desc: #64748b;
+  --ls-desc-selected: #3b82f6;
+
+  --action-bg-hover: #334155;
+  --action-text-hover: #e2e8f0;
+}
+
+/* ========================
    Page & Background
    ======================== */
 .page-wrapper {
   position: relative;
   min-height: 100vh;
-  background: #f8fafc;
+  background: var(--bg-page);
   overflow: hidden;
+  transition: background 0.3s ease;
 }
 
 .bg-blob {
@@ -21,7 +137,7 @@
 .bg-blob-1 {
   width: 500px;
   height: 500px;
-  background: radial-gradient(circle, #dbeafe 0%, transparent 70%);
+  background: radial-gradient(circle, var(--blob-1) 0%, transparent 70%);
   top: -150px;
   right: -100px;
 }
@@ -29,7 +145,7 @@
 .bg-blob-2 {
   width: 400px;
   height: 400px;
-  background: radial-gradient(circle, #fce7f3 0%, transparent 70%);
+  background: radial-gradient(circle, var(--blob-2) 0%, transparent 70%);
   bottom: -100px;
   left: -100px;
 }
@@ -37,7 +153,7 @@
 .bg-blob-3 {
   width: 300px;
   height: 300px;
-  background: radial-gradient(circle, #e0e7ff 0%, transparent 70%);
+  background: radial-gradient(circle, var(--blob-3) 0%, transparent 70%);
   top: 40%;
   left: 50%;
   transform: translateX(-50%);
@@ -47,14 +163,14 @@
    Glass Card
    ======================== */
 .glass-card {
-  background: rgba(255, 255, 255, 0.75);
+  background: var(--bg-card);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.8);
+  border: 1px solid var(--border-card);
   border-radius: 20px;
   box-shadow:
-    0 4px 6px -1px rgba(0, 0, 0, 0.05),
-    0 10px 30px -5px rgba(0, 0, 0, 0.08);
+    0 4px 6px -1px var(--shadow-md),
+    0 10px 30px -5px var(--shadow-lg);
 }
 
 /* ========================
@@ -66,16 +182,30 @@
   padding: 6px 16px;
   font-size: 0.8rem;
   font-weight: 500;
-  color: #6b7280;
-  background: rgba(255, 255, 255, 0.6);
+  color: var(--text-muted);
+  background: var(--bg-glass);
   backdrop-filter: blur(8px);
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-primary);
   border-radius: 999px;
   transition: all 0.2s;
 }
 
 .feature-pill:hover {
+  background: var(--bg-glass-hover);
+  color: var(--text-secondary);
+  border-color: var(--border-hover);
+}
+
+/* ========================
+   Logo (dark mode handling)
+   ======================== */
+.logo-wrapper {
+  display: inline-block;
+  border-radius: 12px;
+  transition: background 0.3s ease;
+}
+
+.dark .logo-wrapper {
   background: rgba(255, 255, 255, 0.9);
-  color: #374151;
-  border-color: #d1d5db;
+  padding: 4px 8px;
 }

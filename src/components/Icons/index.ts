@@ -1,1 +1,11 @@
-export { VideoIcon, SpinnerIcon, ErrorIcon, DocumentIcon } from './Icons';
+export {
+  VideoIcon,
+  SpinnerIcon,
+  ErrorIcon,
+  DocumentIcon,
+  CopyIcon,
+  CheckIcon,
+  DownloadIcon,
+  SunIcon,
+  MoonIcon,
+} from './Icons';

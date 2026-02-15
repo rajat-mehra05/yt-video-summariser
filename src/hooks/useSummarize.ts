@@ -1,13 +1,14 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
+import type { SummaryLength } from '@/types';
 import { API_SUMMARIZE_ENDPOINT } from '@/constants';
 
 interface UseSummarizeReturn {
   summary: string;
   isLoading: boolean;
   error: string | null;
-  submitUrl: (url: string) => void;
+  submitUrl: (url: string, length: SummaryLength) => void;
 }
 
 export function useSummarize(): UseSummarizeReturn {
@@ -22,7 +23,7 @@ export function useSummarize(): UseSummarizeReturn {
     };
   }, []);
 
-  const submitUrl = useCallback(async (url: string) => {
+  const submitUrl = useCallback(async (url: string, length: SummaryLength) => {
     setSummary('');
     setError(null);
     setIsLoading(true);
@@ -35,7 +36,7 @@ export function useSummarize(): UseSummarizeReturn {
       const response = await fetch(API_SUMMARIZE_ENDPOINT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ videoId: url }),
+        body: JSON.stringify({ videoId: url, length }),
         signal: abortController.signal,
       });
 

@@ -1,0 +1,58 @@
+.container {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.option {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 10px 12px;
+  background: var(--ls-bg);
+  border: 2px solid var(--ls-border);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.option:hover:not(:disabled) {
+  border-color: var(--ls-hover-border);
+  background: var(--ls-hover-bg);
+}
+
+.option:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.selected {
+  border-color: var(--ls-selected-border);
+  background: var(--ls-selected-bg);
+}
+
+.selected:hover:not(:disabled) {
+  border-color: var(--ls-selected-border);
+  background: var(--ls-selected-bg);
+}
+
+.label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ls-label);
+}
+
+.selected .label {
+  color: var(--ls-label-selected);
+}
+
+.description {
+  font-size: 0.7rem;
+  color: var(--ls-desc);
+}
+
+.selected .description {
+  color: var(--ls-desc-selected);
+}
