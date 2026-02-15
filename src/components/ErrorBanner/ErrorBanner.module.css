@@ -5,8 +5,8 @@
   margin-top: 12px;
   padding: 12px 16px;
   font-size: 0.875rem;
-  color: #dc2626;
-  background: #fef2f2;
-  border: 1px solid #fecaca;
+  color: var(--text-error);
+  background: var(--bg-error);
+  border: 1px solid var(--border-error);
   border-radius: 12px;
 }

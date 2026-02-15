@@ -1,15 +1,18 @@
 import { NextRequest } from 'next/server';
+import type { SummaryLength } from '@/types';
 import { extractVideoId } from '@/utils/video';
 import { fetchTranscript } from '@/lib/transcript';
 import { getAnthropicClient } from '@/lib/claude';
-import { SUMMARIZE_SYSTEM_PROMPT } from '@/prompts/summarize';
+import { getSummarizePrompt } from '@/prompts/summarize';
 import {
   RATE_LIMIT_WINDOW_MS,
   RATE_LIMIT_MAX_REQUESTS,
   MAX_TRANSCRIPT_LENGTH,
   DEFAULT_MODEL,
   DEFAULT_TEMPERATURE,
-  MAX_TOKENS,
+  SUMMARY_LENGTH_CONFIG,
+  DEFAULT_SUMMARY_LENGTH,
+  VALID_LENGTHS,
 } from '@/constants';
 
 export const runtime = 'nodejs';
@@ -37,6 +40,13 @@ function isRateLimited(ip: string): boolean {
   return recent.length > RATE_LIMIT_MAX_REQUESTS;
 }
 
+function parseSummaryLength(raw: unknown): SummaryLength {
+  if (typeof raw === 'string' && VALID_LENGTHS.includes(raw as SummaryLength)) {
+    return raw as SummaryLength;
+  }
+  return DEFAULT_SUMMARY_LENGTH;
+}
+
 export async function POST(request: NextRequest) {
   const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown';
 
@@ -57,6 +67,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const rawInput = body.videoId;
+    const length = parseSummaryLength(body.length);
 
     if (!rawInput || typeof rawInput !== 'string') {
       return Response.json(
@@ -86,9 +97,9 @@ export async function POST(request: NextRequest) {
 
     const response = await getAnthropicClient().messages.create({
       model: process.env.ANTHROPIC_MODEL || DEFAULT_MODEL,
-      max_tokens: MAX_TOKENS,
+      max_tokens: SUMMARY_LENGTH_CONFIG[length].maxTokens,
       temperature: isNaN(temperature) ? DEFAULT_TEMPERATURE : Math.min(1, Math.max(0, temperature)),
-      system: SUMMARIZE_SYSTEM_PROMPT,
+      system: getSummarizePrompt(length),
       messages: [
         {
           role: 'user',

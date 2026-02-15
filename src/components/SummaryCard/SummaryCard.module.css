@@ -1,24 +1,58 @@
 .summaryCard {
   margin-top: 24px;
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
+  background: var(--bg-input);
+  border: 1px solid var(--border-primary);
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 3px var(--shadow-sm);
 }
 
 .summaryCardHeader {
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: space-between;
   padding: 14px 20px;
   font-size: 0.85rem;
   font-weight: 600;
-  color: #6b7280;
+  color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  background: #f9fafb;
-  border-bottom: 1px solid #f3f4f6;
+  background: var(--bg-card-header);
+  border-bottom: 1px solid var(--border-secondary);
+}
+
+.headerTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.headerActions {
+  display: flex;
+  gap: 6px;
+}
+
+.actionButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-transform: none;
+  letter-spacing: normal;
+  background: transparent;
+  border: 1px solid var(--border-primary);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.actionButton:hover {
+  background: var(--action-bg-hover);
+  color: var(--action-text-hover);
+  border-color: var(--border-hover);
 }
 
 .loadingState {
@@ -27,7 +61,7 @@
   gap: 12px;
   padding: 24px 20px;
   font-size: 0.9rem;
-  color: #9ca3af;
+  color: var(--text-faint);
 }
 
 .loadingDots {
@@ -38,7 +72,7 @@
 .loadingDots span {
   width: 6px;
   height: 6px;
-  background: #3b82f6;
+  background: var(--accent-blue);
   border-radius: 50%;
   animation: dotPulse 1.4s ease-in-out infinite;
 }
@@ -64,24 +98,24 @@
 
 .proseSummary {
   padding: 20px 24px 24px;
-  color: #374151;
+  color: var(--text-secondary);
   line-height: 1.75;
 }
 
 .proseSummary h1 {
   font-size: 1.4rem;
   font-weight: 700;
-  color: #111827;
+  color: var(--text-primary);
   margin-top: 0;
   margin-bottom: 1rem;
   padding-bottom: 0.75rem;
-  border-bottom: 2px solid #e5e7eb;
+  border-bottom: 2px solid var(--border-primary);
 }
 
 .proseSummary h2 {
   font-size: 1.15rem;
   font-weight: 700;
-  color: #1f2937;
+  color: var(--text-primary);
   margin-top: 1.75rem;
   margin-bottom: 0.75rem;
   display: flex;
@@ -98,7 +132,7 @@
   display: inline-block;
   width: 4px;
   height: 1.2em;
-  background: linear-gradient(180deg, #3b82f6, #2563eb);
+  background: linear-gradient(180deg, var(--accent-blue), var(--accent-blue-dark));
   border-radius: 2px;
   flex-shrink: 0;
 }
@@ -106,7 +140,7 @@
 .proseSummary h3 {
   font-size: 1rem;
   font-weight: 600;
-  color: #374151;
+  color: var(--text-secondary);
   margin-top: 1.25rem;
   margin-bottom: 0.5rem;
 }
@@ -134,7 +168,7 @@
   top: 0.6em;
   width: 6px;
   height: 6px;
-  background: #3b82f6;
+  background: var(--accent-blue);
   border-radius: 50%;
 }
 
@@ -145,28 +179,28 @@
 
 .proseSummary ul ul li::before {
   background: transparent;
-  border: 1.5px solid #93c5fd;
+  border: 1.5px solid var(--accent-blue-light);
   width: 5px;
   height: 5px;
 }
 
 .proseSummary strong {
-  color: #111827;
+  color: var(--text-primary);
   font-weight: 600;
 }
 
 .proseSummary blockquote {
-  border-left: 3px solid #3b82f6;
+  border-left: 3px solid var(--accent-blue);
   margin: 1rem 0;
-  color: #4b5563;
+  color: var(--text-muted);
   font-style: italic;
-  background: linear-gradient(135deg, #eff6ff, #f0f7ff);
+  background: var(--bg-blockquote);
   padding: 0.75rem 1rem;
   border-radius: 0 10px 10px 0;
 }
 
 .proseSummary code {
-  background: #f3f4f6;
+  background: var(--bg-code);
   padding: 0.15rem 0.4rem;
   border-radius: 4px;
   font-size: 0.9em;
@@ -174,6 +208,6 @@
 
 .proseSummary hr {
   border: none;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid var(--border-primary);
   margin: 1.25rem 0;
 }

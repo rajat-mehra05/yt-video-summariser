@@ -1,5 +1,6 @@
 import Image from "next/image";
 import SummarizerForm from "@/components/SummarizerForm";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export default function Home() {
   return (
@@ -10,20 +11,27 @@ export default function Home() {
       <div className="bg-blob bg-blob-3" />
 
       {/* Header */}
-      <header className="relative z-10 px-6 py-4">
-        <Image
-          src="/logo.png"
-          alt="YouTube Video Summariser"
-          width={345}
-          height={100}
-          className="mx-auto"
-          priority
-        />
+      <header className="relative z-10 px-6 py-4 text-center">
+        <div className="logo-wrapper">
+          <Image
+            src="/logo.png"
+            alt="YouTube Video Summariser"
+            width={345}
+            height={100}
+            priority
+          />
+        </div>
+        <div className="absolute top-4 right-6">
+          <ThemeToggle />
+        </div>
       </header>
 
       <main className="relative z-10 px-4 pb-10">
         {/* Tagline */}
-        <p className="text-gray-500 text-lg max-w-md mx-auto text-center leading-relaxed mb-10 mt-6">
+        <p
+          className="text-lg max-w-md mx-auto text-center leading-relaxed mb-10 mt-6"
+          style={{ color: 'var(--text-muted)' }}
+        >
           Paste any YouTube link and get an instant AI-powered summary
         </p>
 
@@ -38,7 +46,7 @@ export default function Home() {
             <span className="feature-pill">Streaming Responses</span>
             <span className="feature-pill">Markdown Summaries</span>
           </div>
-          <p className="text-sm text-gray-400">
+          <p className="text-sm" style={{ color: 'var(--text-faint)' }}>
             AI can make mistakes, so double-check it.
           </p>
         </footer>

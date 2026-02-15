@@ -2,16 +2,20 @@
 
 import type React from 'react';
 import { useState, useRef, useEffect } from 'react';
+import type { SummaryLength } from '@/types';
 import { extractVideoId } from '@/utils/video';
 import { useSummarize } from '@/hooks/useSummarize';
 import { VideoIcon, SpinnerIcon } from '@/components/Icons';
 import { ErrorBanner } from '@/components/ErrorBanner';
 import { SummaryCard } from '@/components/SummaryCard';
+import { LengthSelector } from '@/components/LengthSelector';
 import styles from './SummarizerForm.module.css';
 
 export default function SummarizerForm() {
   const [input, setInput] = useState('');
+  const [length, setLength] = useState<SummaryLength>('medium');
   const [validationError, setValidationError] = useState<string | null>(null);
+  const [currentVideoId, setCurrentVideoId] = useState<string | null>(null);
   const { summary, isLoading, error, submitUrl } = useSummarize();
   const resultRef = useRef<HTMLDivElement>(null);
   const prevLoadingRef = useRef(false);
@@ -34,13 +38,16 @@ export default function SummarizerForm() {
       return;
     }
     setValidationError(null);
-    submitUrl(videoId);
+    setCurrentVideoId(videoId);
+    submitUrl(videoId, length);
   };
 
   const displayError = validationError || error;
 
   return (
     <div className="w-full">
+      <LengthSelector value={length} onChange={setLength} disabled={isLoading} />
+
       <form onSubmit={handleSubmit} className="relative">
         <div className={styles.inputGroup}>
           <VideoIcon className={styles.inputIcon} />
@@ -69,13 +76,13 @@ export default function SummarizerForm() {
         </div>
       </form>
 
-      {displayError && <ErrorBanner message={displayError} />}
+      {displayError ? <ErrorBanner message={displayError} /> : null}
 
-      {(summary || isLoading) && (
+      {(summary || isLoading) ? (
         <div ref={resultRef} tabIndex={-1} className="outline-none">
-          <SummaryCard summary={summary} />
+          <SummaryCard summary={summary} isLoading={isLoading} videoId={currentVideoId ?? undefined} />
         </div>
-      )}
+      ) : null}
     </div>
   );
 }
