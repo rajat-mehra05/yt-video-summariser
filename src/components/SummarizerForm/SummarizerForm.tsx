@@ -82,6 +82,8 @@ export default function SummarizerForm() {
         <div ref={resultRef} tabIndex={-1} className="outline-none">
           <SummaryCard summary={summary} isLoading={isLoading} videoId={currentVideoId ?? undefined} />
         </div>
+      ) : !displayError ? (
+        <p className={styles.emptyHint}>Enter a YouTube URL above to get started</p>
       ) : null}
     </div>
   );
