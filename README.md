@@ -2,6 +2,12 @@
 
 Paste any YouTube link and get an instant AI-powered summary. YT Summarizer extracts video transcripts and uses Claude AI to generate well-structured, readable markdown summaries — streamed to your browser in real time.
 
+## Preview
+
+| Dark Mode | Light Mode |
+|:---------:|:----------:|
+| ![Dark Mode](public/dark-mode.png) | ![Light Mode](public/light-mode.png) |
+
 ## Tech Stack
 
 - [Next.js 16](https://nextjs.org) with App Router
@@ -63,15 +69,26 @@ npm run build
 npm start
 ```
 
+## Features
+
+- **Summary length selection** — choose between Short (key takeaways), Medium (balanced summary), or Long (full detail) before generating
+- **Real-time streaming** — summaries stream to your browser as they're generated
+- **Copy to clipboard** — one-click copy of the full summary
+- **Download as Markdown** — export any summary as a `.md` file
+- **Dark / Light mode** — toggle between themes
+- **Structured output** — summaries use consistent Markdown formatting with headings, bullet points, and blockquotes
+
 ## Usage
 
 1. Paste a YouTube video URL into the input field.
-2. Click **Summarize**.
-3. The AI-generated summary streams in real time with structured sections.
+2. Select a summary length — **Short**, **Medium**, or **Long**.
+3. Click **Summarize**.
+4. The AI-generated summary streams in real time with structured sections.
+5. Use **Copy** or **Download** to save the result.
 
 ## Known Limitations
 
-> **The live demo may not work reliably.** YouTube aggressively blocks requests from cloud/datacenter IPs (AWS, GCP, Vercel, etc.) with "Sign in to confirm you're not a bot" errors. Free proxy services (including Webshare's free datacenter proxies) are also blocked. Residential proxies (~$6/mo) are the only reliable workaround for cloud deployments.
+> **The live demo may not work reliably.** YouTube aggressively blocks requests from cloud/datacenter IPs (AWS, GCP, Vercel, etc.) with "Sign in to confirm you're not a bot" errors. Free proxy services (including Webshare's free datacenter proxies) are also blocked. A residential proxy (~$6/mo) would fix this, but I'm broke, so here we are.
 >
 > **To try the app, please run it locally** — your home IP is not blocked by YouTube. See [Getting Started](#getting-started) for setup instructions.
 

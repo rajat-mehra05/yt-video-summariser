@@ -9,7 +9,9 @@ const proxyConfig =
       )
     : undefined;
 
-const api = new YouTubeTranscriptApi(proxyConfig);
+// Skip proxy for local development — residential proxies often get blocked by YouTube
+const useProxy = proxyConfig && process.env.NODE_ENV === 'production';
+const api = new YouTubeTranscriptApi(useProxy ? proxyConfig : undefined);
 const formatter = new TextFormatter();
 
 export async function fetchTranscript(videoId: string): Promise<{
