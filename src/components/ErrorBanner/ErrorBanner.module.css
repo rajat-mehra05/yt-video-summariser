@@ -1,12 +1,24 @@
 .errorBanner {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-top: 12px;
-  padding: 12px 16px;
-  font-size: 0.875rem;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--font-size-sm);
   color: var(--text-error);
   background: var(--bg-error);
   border: 1px solid var(--border-error);
-  border-radius: 12px;
+  border-radius: var(--radius-md);
+  animation: error-entrance var(--duration-fast) var(--ease-out) both;
+}
+
+@keyframes error-entrance {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

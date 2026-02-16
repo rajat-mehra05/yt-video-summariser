@@ -4,17 +4,30 @@
   justify-content: center;
   width: 40px;
   height: 40px;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   border: 1px solid var(--border-primary);
   background: var(--bg-glass);
   backdrop-filter: blur(8px);
   color: var(--text-muted);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--duration-fast) var(--ease-default);
 }
 
 .toggleButton:hover {
   background: var(--bg-glass-hover);
   color: var(--text-primary);
   border-color: var(--border-hover);
+}
+
+.toggleButton:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+.toggleButton svg {
+  transition: transform var(--duration-normal) var(--ease-out), opacity var(--duration-fast) var(--ease-default);
+}
+
+.toggleButton:active svg {
+  transform: rotate(30deg);
 }

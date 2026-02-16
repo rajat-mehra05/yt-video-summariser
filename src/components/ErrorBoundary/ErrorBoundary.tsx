@@ -1,6 +1,7 @@
 'use client';
 
 import { Component, ReactNode } from 'react';
+import { ErrorBanner } from '@/components/ErrorBanner';
 
 interface Props {
   children: ReactNode;
@@ -25,9 +26,7 @@ export class ErrorBoundary extends Component<Props, State> {
   render() {
     if (this.state.hasError) {
       return this.props.fallback ?? (
-        <div role="alert">
-          Something went wrong while rendering the summary. Please try again.
-        </div>
+        <ErrorBanner message="Something went wrong while rendering the summary. Please try again." />
       );
     }
     return this.props.children;

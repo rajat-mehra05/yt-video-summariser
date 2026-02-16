@@ -14,6 +14,7 @@ interface SummaryCardProps {
 
 export function SummaryCard({ summary, isLoading, videoId }: SummaryCardProps) {
   const [copied, setCopied] = useState(false);
+  const [showPulse, setShowPulse] = useState(false);
   const copyTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -37,7 +38,11 @@ export function SummaryCard({ summary, isLoading, videoId }: SummaryCardProps) {
     }
     if (copyTimeoutRef.current) clearTimeout(copyTimeoutRef.current);
     setCopied(true);
-    copyTimeoutRef.current = setTimeout(() => setCopied(false), 2000);
+    setShowPulse(true);
+    copyTimeoutRef.current = setTimeout(() => {
+      setCopied(false);
+      setShowPulse(false);
+    }, 2000);
   }, [summary]);
 
   const handleDownload = useCallback(() => {
@@ -65,7 +70,7 @@ export function SummaryCard({ summary, isLoading, videoId }: SummaryCardProps) {
           <div className={styles.headerActions}>
             <button
               onClick={handleCopy}
-              className={styles.actionButton}
+              className={`${styles.actionButton} ${showPulse ? styles.copyPulse : ''}`}
               aria-label={copied ? 'Copied to clipboard' : 'Copy summary'}
             >
               {copied ? <CheckIcon /> : <CopyIcon />}
@@ -90,10 +95,13 @@ export function SummaryCard({ summary, isLoading, videoId }: SummaryCardProps) {
         </div>
       ) : (
         <div className={styles.loadingState}>
-          <div className={styles.loadingDots}>
-            <span /><span /><span />
+          <span className={styles.loadingText}>Generating summary...</span>
+          <div className={styles.skeletonLines}>
+            <div className={styles.skeletonLine} />
+            <div className={styles.skeletonLine} />
+            <div className={styles.skeletonLine} />
+            <div className={styles.skeletonLine} />
           </div>
-          Fetching transcript and generating summary...
         </div>
       )}
     </div>

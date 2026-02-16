@@ -1,7 +1,7 @@
 .container {
   display: flex;
-  gap: 8px;
-  margin-bottom: 16px;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
 }
 
 .option {
@@ -10,12 +10,12 @@
   flex-direction: column;
   align-items: center;
   gap: 2px;
-  padding: 10px 12px;
+  padding: 10px var(--space-3);
   background: var(--ls-bg);
   border: 2px solid var(--ls-border);
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--duration-fast) var(--ease-default);
 }
 
 .option:hover:not(:disabled) {
@@ -26,6 +26,11 @@
 .option:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.option:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
 }
 
 .selected {
@@ -39,7 +44,7 @@
 }
 
 .label {
-  font-size: 0.85rem;
+  font-size: var(--font-size-sm);
   font-weight: 600;
   color: var(--ls-label);
 }
@@ -49,10 +54,16 @@
 }
 
 .description {
-  font-size: 0.7rem;
+  font-size: var(--font-size-xs);
   color: var(--ls-desc);
 }
 
 .selected .description {
   color: var(--ls-desc-selected);
+}
+
+@media (max-width: 480px) {
+  .description {
+    display: none;
+  }
 }
