@@ -5,10 +5,10 @@
   border-radius: var(--radius-lg);
   overflow: hidden;
   box-shadow: 0 1px 3px var(--shadow-sm);
-  animation: cardEntrance var(--duration-slow) var(--ease-out) both;
+  animation: card-entrance var(--duration-slow) var(--ease-out) both;
 }
 
-@keyframes cardEntrance {
+@keyframes card-entrance {
   from {
     opacity: 0;
     transform: translateY(8px);

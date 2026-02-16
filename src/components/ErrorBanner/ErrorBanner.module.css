@@ -9,10 +9,10 @@
   background: var(--bg-error);
   border: 1px solid var(--border-error);
   border-radius: var(--radius-md);
-  animation: errorEntrance var(--duration-fast) var(--ease-out) both;
+  animation: error-entrance var(--duration-fast) var(--ease-out) both;
 }
 
-@keyframes errorEntrance {
+@keyframes error-entrance {
   from {
     opacity: 0;
     transform: translateY(-4px);
