@@ -143,6 +143,14 @@ export async function POST(request: NextRequest) {
       return Response.json({ error: knownError.message }, { status: knownError.status });
     }
 
+    const errorStr = String(error).toLowerCase();
+    if (errorStr.includes('not a bot') || errorStr.includes('sign in')) {
+      return Response.json(
+        { error: 'YouTube is requiring bot verification. Please try again in a few minutes, or configure a proxy.' },
+        { status: 503 }
+      );
+    }
+
     console.error('Summarize API error:', error);
     return Response.json({ error: 'An internal error occurred. Please try again later.' }, { status: 500 });
   }
