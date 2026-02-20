@@ -1,4 +1,5 @@
-import type { SummaryLength } from '@/types';
+import type { SummaryLength, SummaryLanguage } from '@/types';
+import { LANGUAGE_NAMES, DEFAULT_SUMMARY_LANGUAGE } from '@/constants';
 
 const LENGTH_INSTRUCTIONS: Record<SummaryLength, string> = {
   short: `Keep the summary very concise — aim for 3-5 bullet points covering only the most important takeaways.
@@ -45,6 +46,13 @@ Timestamp rules:
 - Always place timestamps AFTER punctuation, never before. Correct: "The filtering technique: [5:47]" — Wrong: "The filtering technique [5:47]:"
 - Use the exact format [M:SS] or [H:MM:SS] — do not alter the bracket notation`;
 
-export function getSummarizePrompt(length: SummaryLength = 'medium'): string {
-  return `${BASE_PROMPT}\n\nLength guideline: ${LENGTH_INSTRUCTIONS[length]}`;
+export function getSummarizePrompt(length: SummaryLength = 'medium', language: SummaryLanguage = DEFAULT_SUMMARY_LANGUAGE): string {
+  let prompt = `${BASE_PROMPT}\n\nLength guideline: ${LENGTH_INSTRUCTIONS[length]}`;
+  if (language !== DEFAULT_SUMMARY_LANGUAGE) {
+    prompt += `\n\nWrite the entire summary in ${LANGUAGE_NAMES[language]}. Translate everything — section headings, sub-headings, prose, bullet points, and quoted text — into ${LANGUAGE_NAMES[language]}.`;
+    if (language === 'as') {
+      prompt += ` Use pure native Assamese (অসমীয়া) script and vocabulary. Do NOT use Bengali — Assamese has its own distinct script, grammar, and vocabulary.`;
+    }
+  }
+  return prompt;
 }

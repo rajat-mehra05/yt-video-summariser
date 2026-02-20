@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import type { SummaryLength, VideoMetadata } from '@/types';
+import type { SummaryLength, SummaryLanguage, VideoMetadata } from '@/types';
 import { extractVideoId } from '@/utils/video';
 import { fetchTranscript, fetchVideoMetadata } from '@/lib/transcript';
 import { getAnthropicClient } from '@/lib/claude';
@@ -15,6 +15,8 @@ import {
   VALID_LENGTHS,
   CACHE_TTL_MS,
   CACHE_MAX_SIZE,
+  DEFAULT_SUMMARY_LANGUAGE,
+  VALID_LANGUAGES,
 } from '@/constants';
 
 export const runtime = 'nodejs';
@@ -74,6 +76,13 @@ function parseSummaryLength(raw: unknown): SummaryLength {
   return DEFAULT_SUMMARY_LENGTH;
 }
 
+function parseSummaryLanguage(raw: unknown): SummaryLanguage {
+  if (typeof raw === 'string' && VALID_LANGUAGES.includes(raw as SummaryLanguage)) {
+    return raw as SummaryLanguage;
+  }
+  return DEFAULT_SUMMARY_LANGUAGE;
+}
+
 export async function POST(request: NextRequest) {
   const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown';
 
@@ -95,6 +104,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const rawInput = body.videoId;
     const length = parseSummaryLength(body.length);
+    const language = parseSummaryLanguage(body.language);
 
     if (!rawInput || typeof rawInput !== 'string') {
       return Response.json(
@@ -112,7 +122,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check cache before fetching transcript or calling Claude
-    const cacheKey = `${videoId}:${length}`;
+    const cacheKey = `${videoId}:${length}:${language}`;
     const cached = summaryCache.get(cacheKey);
     if (cached && Date.now() - cached.createdAt < CACHE_TTL_MS) {
       // Streaming protocol: first newline-delimited line is JSON metadata,
@@ -147,7 +157,7 @@ export async function POST(request: NextRequest) {
       model: process.env.ANTHROPIC_MODEL || DEFAULT_MODEL,
       max_tokens: SUMMARY_LENGTH_CONFIG[length].maxTokens,
       temperature: isNaN(temperature) ? DEFAULT_TEMPERATURE : Math.min(1, Math.max(0, temperature)),
-      system: getSummarizePrompt(length),
+      system: getSummarizePrompt(length, language),
       messages: [
         {
           role: 'user',

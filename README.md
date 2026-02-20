@@ -72,6 +72,11 @@ npm start
 ## Features
 
 - **Summary length selection** — choose between Short (key takeaways), Medium (balanced summary), or Long (full detail) before generating
+- **Multi-language summaries** — generate summaries in 11 languages: English, Spanish, French, German, Portuguese, Japanese, Korean, Chinese, Hindi, Arabic, and Assamese. Language preference persists across sessions
+- **Video metadata display** — see video title, channel name, thumbnail, duration, and view count before and alongside your summary
+- **Clickable timestamps** — summaries include timestamps that link directly to the corresponding moment in the YouTube video
+- **Share via URL** — share any summary with a single link that auto-generates the summary for the recipient
+- **Server-side caching** — identical requests are served from cache, saving API costs and reducing latency
 - **Real-time streaming** — summaries stream to your browser as they're generated
 - **Copy to clipboard** — one-click copy of the full summary
 - **Download as Markdown** — export any summary as a `.md` file
@@ -82,9 +87,10 @@ npm start
 
 1. Paste a YouTube video URL into the input field.
 2. Select a summary length — **Short**, **Medium**, or **Long**.
-3. Click **Summarize**.
-4. The AI-generated summary streams in real time with structured sections.
-5. Use **Copy** or **Download** to save the result.
+3. Choose a language for the summary output (defaults to English).
+4. Click **Summarize**.
+5. The AI-generated summary streams in real time with structured sections and clickable timestamps.
+6. Use **Copy**, **Download**, or **Share** to save or share the result.
 
 ## Known Limitations
 

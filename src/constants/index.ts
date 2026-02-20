@@ -1,4 +1,4 @@
-import type { SummaryLength } from '@/types';
+import type { SummaryLength, SummaryLanguage } from '@/types';
 
 // Rate limiting
 export const RATE_LIMIT_WINDOW_MS = 60_000;
@@ -25,6 +25,30 @@ export const LENGTH_OPTIONS = (Object.entries(SUMMARY_LENGTH_CONFIG) as [Summary
 
 export const DEFAULT_SUMMARY_LENGTH: SummaryLength = 'medium';
 export const VALID_LENGTHS: SummaryLength[] = ['short', 'medium', 'long'];
+
+// Language configuration
+export const LANGUAGE_OPTIONS: { value: SummaryLanguage; label: string }[] = [
+  { value: 'en', label: 'English' },
+  { value: 'es', label: 'Spanish' },
+  { value: 'fr', label: 'French' },
+  { value: 'de', label: 'German' },
+  { value: 'pt', label: 'Portuguese' },
+  { value: 'ja', label: 'Japanese' },
+  { value: 'ko', label: 'Korean' },
+  { value: 'zh', label: 'Chinese (Simplified)' },
+  { value: 'hi', label: 'Hindi' },
+  { value: 'ar', label: 'Arabic' },
+  { value: 'as', label: 'Assamese' },
+];
+
+export const DEFAULT_SUMMARY_LANGUAGE: SummaryLanguage = 'en';
+export const VALID_LANGUAGES: SummaryLanguage[] = LANGUAGE_OPTIONS.map((o) => o.value);
+export const LANGUAGE_NAMES: Record<SummaryLanguage, string> = Object.fromEntries(
+  LANGUAGE_OPTIONS.map((o) => [o.value, o.label])
+) as Record<SummaryLanguage, string>;
+
+// localStorage key for language preference
+export const LANGUAGE_STORAGE_KEY = 'yt-summarizer-language';
 
 // Validation messages
 export const VALIDATION_MESSAGES = {
