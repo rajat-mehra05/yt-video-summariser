@@ -36,7 +36,14 @@ Brief concluding thoughts.
 Important formatting rules:
 - Always use ## for section headings and ### for sub-topic headings
 - Never put headings inside bullet points
-- Use bullet points only for supporting details under a heading`;
+- Use bullet points only for supporting details under a heading
+
+Timestamp rules:
+- The transcript includes timestamps in [M:SS] or [H:MM:SS] format at the start of each segment
+- When summarizing key points, include the relevant timestamp so users can jump to that moment
+- Place timestamps inline naturally, e.g. "The speaker explains X [2:15] and then covers Y [5:30]"
+- Always place timestamps AFTER punctuation, never before. Correct: "The filtering technique: [5:47]" — Wrong: "The filtering technique [5:47]:"
+- Use the exact format [M:SS] or [H:MM:SS] — do not alter the bracket notation`;
 
 export function getSummarizePrompt(length: SummaryLength = 'medium'): string {
   return `${BASE_PROMPT}\n\nLength guideline: ${LENGTH_INSTRUCTIONS[length]}`;

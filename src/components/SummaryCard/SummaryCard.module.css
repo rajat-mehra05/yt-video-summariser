@@ -13,6 +13,7 @@
     opacity: 0;
     transform: translateY(8px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -73,9 +74,17 @@
 }
 
 @keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }
 
 .loadingState {
@@ -92,8 +101,15 @@
 }
 
 @keyframes text-pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -110,25 +126,39 @@
 
 .skeletonLine {
   height: 12px;
-  background: linear-gradient(
-    90deg,
-    var(--border-secondary) 25%,
-    var(--border-primary) 50%,
-    var(--border-secondary) 75%
-  );
+  background: linear-gradient(90deg,
+      var(--border-secondary) 25%,
+      var(--border-primary) 50%,
+      var(--border-secondary) 75%);
   background-size: 200% 100%;
   border-radius: var(--radius-sm);
   animation: shimmer 1.5s ease-in-out infinite;
 }
 
-.skeletonLine:nth-child(1) { width: 90%; }
-.skeletonLine:nth-child(2) { width: 75%; }
-.skeletonLine:nth-child(3) { width: 85%; }
-.skeletonLine:nth-child(4) { width: 60%; }
+.skeletonLine:nth-child(1) {
+  width: 90%;
+}
+
+.skeletonLine:nth-child(2) {
+  width: 75%;
+}
+
+.skeletonLine:nth-child(3) {
+  width: 85%;
+}
+
+.skeletonLine:nth-child(4) {
+  width: 60%;
+}
 
 @keyframes shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 .proseSummary {
@@ -256,4 +286,25 @@
   border: none;
   border-top: 1px solid var(--border-primary);
   margin: 1.25rem 0;
+}
+
+.timestamp {
+  display: inline;
+  padding: 0;
+  font-size: 0.85em;
+  font-weight: 600;
+  font-family: var(--font-geist-sans), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  background: none;
+  color: var(--text-error);
+  text-decoration: underline wavy var(--text-error);
+  text-underline-offset: 3px;
+  white-space: nowrap;
+  transition: all var(--duration-fast) var(--ease-default);
+}
+
+.timestamp:hover {
+  background: none;
+  color: var(--text-error);
+  text-decoration: underline wavy var(--text-error);
 }

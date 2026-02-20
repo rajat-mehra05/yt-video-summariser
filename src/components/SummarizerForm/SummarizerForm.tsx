@@ -9,6 +9,7 @@ import { useSummarize } from '@/hooks/useSummarize';
 import { VideoIcon, SpinnerIcon } from '@/components/Icons';
 import { ErrorBanner } from '@/components/ErrorBanner';
 import { SummaryCard } from '@/components/SummaryCard';
+import { VideoInfo } from '@/components/VideoInfo';
 import { LengthSelector } from '@/components/LengthSelector';
 import styles from './SummarizerForm.module.css';
 
@@ -17,7 +18,7 @@ export default function SummarizerForm() {
   const [length, setLength] = useState<SummaryLength>('medium');
   const [validationError, setValidationError] = useState<string | null>(null);
   const [currentVideoId, setCurrentVideoId] = useState<string | null>(null);
-  const { summary, isLoading, error, submitUrl } = useSummarize();
+  const { summary, isLoading, error, metadata, submitUrl } = useSummarize();
   const resultRef = useRef<HTMLDivElement>(null);
   const prevLoadingRef = useRef(false);
 
@@ -78,6 +79,8 @@ export default function SummarizerForm() {
       </form>
 
       {displayError ? <ErrorBanner message={displayError} /> : null}
+
+      {metadata ? <VideoInfo metadata={metadata} /> : null}
 
       {(summary || isLoading) ? (
         <div ref={resultRef} tabIndex={-1} className="outline-none">
