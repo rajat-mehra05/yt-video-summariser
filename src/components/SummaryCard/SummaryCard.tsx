@@ -4,7 +4,8 @@ import { useState, useRef, useEffect, useCallback, useMemo, type ReactNode } fro
 import ReactMarkdown from 'react-markdown';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { COPY_FEEDBACK_DURATION_MS, DOWNLOAD_FILENAME_PREFIX } from '@/constants';
-import { DocumentIcon, CopyIcon, CheckIcon, DownloadIcon } from '@/components/Icons';
+import { DocumentIcon, CopyIcon, CheckIcon, DownloadIcon, ShareIcon } from '@/components/Icons';
+import type { SummaryLength } from '@/types';
 import styles from './SummaryCard.module.css';
 
 const TIMESTAMP_REGEX = /\[(\d{1,2}:\d{2}(?::\d{2})?)\]/g;
@@ -89,36 +90,44 @@ function processChildren(children: ReactNode, videoId?: string): ReactNode {
   return children;
 }
 
+async function copyToClipboard(text: string): Promise<void> {
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+  }
+}
+
 interface SummaryCardProps {
   summary: string;
   isLoading: boolean;
   videoId?: string;
+  length?: SummaryLength;
 }
 
-export function SummaryCard({ summary, isLoading, videoId }: SummaryCardProps) {
+export function SummaryCard({ summary, isLoading, videoId, length }: SummaryCardProps) {
   const [copied, setCopied] = useState(false);
   const [showPulse, setShowPulse] = useState(false);
+  const [shared, setShared] = useState(false);
   const copyTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const shareTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     return () => {
       if (copyTimeoutRef.current) clearTimeout(copyTimeoutRef.current);
+      if (shareTimeoutRef.current) clearTimeout(shareTimeoutRef.current);
     };
   }, []);
 
   const handleCopy = useCallback(async () => {
-    try {
-      await navigator.clipboard.writeText(summary);
-    } catch {
-      const textarea = document.createElement('textarea');
-      textarea.value = summary;
-      textarea.style.position = 'fixed';
-      textarea.style.opacity = '0';
-      document.body.appendChild(textarea);
-      textarea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textarea);
-    }
+    await copyToClipboard(summary);
     if (copyTimeoutRef.current) clearTimeout(copyTimeoutRef.current);
     setCopied(true);
     setShowPulse(true);
@@ -139,6 +148,17 @@ export function SummaryCard({ summary, isLoading, videoId }: SummaryCardProps) {
     document.body.removeChild(anchor);
     URL.revokeObjectURL(url);
   }, [summary, videoId]);
+
+  const handleShare = useCallback(async () => {
+    if (!videoId) return;
+    const params = new URLSearchParams({ v: videoId });
+    if (length) params.set('length', length);
+    const shareUrl = `${window.location.origin}/?${params.toString()}`;
+    await copyToClipboard(shareUrl);
+    if (shareTimeoutRef.current) clearTimeout(shareTimeoutRef.current);
+    setShared(true);
+    shareTimeoutRef.current = setTimeout(() => setShared(false), COPY_FEEDBACK_DURATION_MS);
+  }, [videoId, length]);
 
   const showActions = summary && !isLoading;
 
@@ -188,6 +208,16 @@ export function SummaryCard({ summary, isLoading, videoId }: SummaryCardProps) {
               <DownloadIcon />
               Download
             </button>
+            {videoId ? (
+              <button
+                onClick={handleShare}
+                className={styles.actionButton}
+                aria-label={shared ? 'Share link copied' : 'Copy share link'}
+              >
+                {shared ? <CheckIcon /> : <ShareIcon />}
+                {shared ? 'Copied!' : 'Share'}
+              </button>
+            ) : null}
           </div>
         ) : null}
       </div>
