@@ -35,6 +35,10 @@ export const VALIDATION_MESSAGES = {
 export const COPY_FEEDBACK_DURATION_MS = 2000;
 export const DOWNLOAD_FILENAME_PREFIX = 'yt-summary';
 
+// Summary cache
+export const CACHE_TTL_MS = 86_400_000; // 24 hours
+export const CACHE_MAX_SIZE = 500;
+
 // API
 export const API_SUMMARIZE_ENDPOINT = '/api/summarize';
 
