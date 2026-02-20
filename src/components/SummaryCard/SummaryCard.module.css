@@ -306,5 +306,6 @@
 .timestamp:hover {
   background: none;
   color: var(--text-error);
-  text-decoration: underline wavy var(--text-error);
+  text-decoration: underline solid var(--text-error);
+  text-underline-offset: 2px;
 }

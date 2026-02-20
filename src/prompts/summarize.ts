@@ -39,7 +39,7 @@ Important formatting rules:
 - Use bullet points only for supporting details under a heading
 
 Timestamp rules:
-- The transcript includes timestamps in [M:SS] or [H:MM:SS] format at the start of each segment
+- If the transcript includes timestamps in [M:SS] or [H:MM:SS] format, follow these rules. If no timestamps are present, do not invent them — simply omit timestamps from the summary
 - When summarizing key points, include the relevant timestamp so users can jump to that moment
 - Place timestamps inline naturally, e.g. "The speaker explains X [2:15] and then covers Y [5:30]"
 - Always place timestamps AFTER punctuation, never before. Correct: "The filtering technique: [5:47]" — Wrong: "The filtering technique [5:47]:"

@@ -94,6 +94,16 @@ export function useSummarize(): UseSummarizeReturn {
           setSummary((prev) => prev + chunk);
         }
       }
+
+      // Flush buffer if stream ended before metadata newline delimiter
+      if (!metadataParsed && buffer) {
+        const parsed = parseMetadataLine(buffer);
+        if (parsed) {
+          setMetadata(parsed);
+        } else {
+          setSummary((prev) => prev + buffer);
+        }
+      }
     } catch (err) {
       if (err instanceof Error && err.name === 'AbortError') return;
       setError(err instanceof Error ? err.message : 'An unexpected error occurred');

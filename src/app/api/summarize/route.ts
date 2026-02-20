@@ -113,6 +113,8 @@ export async function POST(request: NextRequest) {
       stream: true,
     });
 
+    // Streaming protocol: first newline-delimited line is JSON metadata,
+    // remaining bytes are the streamed LLM summary text (parsed by useSummarize hook)
     const encoder = new TextEncoder();
     const metadataLine = JSON.stringify(metadata ?? {}) + '\n';
     const readableStream = new ReadableStream({

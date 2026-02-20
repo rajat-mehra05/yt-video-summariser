@@ -4,6 +4,6 @@ export interface VideoMetadata {
   id: string;
   title: string;
   author: string;
-  lengthSeconds: number;
-  viewCount: number;
+  lengthSeconds?: number;
+  viewCount?: number;
 }

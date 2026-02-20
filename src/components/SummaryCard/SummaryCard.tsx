@@ -55,11 +55,13 @@ function stripTimestamps(children: ReactNode): ReactNode {
     return children.replace(TIMESTAMP_REGEX, '').replace(/\s{2,}/g, ' ').trim();
   }
   if (Array.isArray(children)) {
-    return children.map((child, i) =>
-      typeof child === 'string'
-        ? child.replace(TIMESTAMP_REGEX, '').replace(/\s{2,}/g, ' ').trim()
-        : child
-    );
+    return children
+      .map((child) =>
+        typeof child === 'string'
+          ? child.replace(TIMESTAMP_REGEX, '').replace(/\s{2,}/g, ' ').trim()
+          : child
+      )
+      .filter((child) => child !== '');
   }
   return children;
 }

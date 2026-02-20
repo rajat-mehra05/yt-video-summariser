@@ -101,7 +101,8 @@ const OEMBED_URL = 'https://www.youtube.com/oembed';
 
 export async function fetchVideoMetadata(videoId: string): Promise<VideoMetadata | null> {
   try {
-    const url = `${OEMBED_URL}?url=https://www.youtube.com/watch?v=${videoId}&format=json`;
+    const innerUrl = encodeURIComponent(`https://www.youtube.com/watch?v=${videoId}`);
+    const url = `${OEMBED_URL}?url=${innerUrl}&format=json`;
     const res = await fetch(url, { signal: AbortSignal.timeout(5000) });
     if (!res.ok) return null;
     const data = await res.json();
@@ -109,8 +110,6 @@ export async function fetchVideoMetadata(videoId: string): Promise<VideoMetadata
       id: videoId,
       title: data.title ?? '',
       author: data.author_name ?? '',
-      lengthSeconds: 0,
-      viewCount: 0,
     };
   } catch {
     return null;
