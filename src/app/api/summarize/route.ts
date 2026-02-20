@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import type { SummaryLength } from '@/types';
+import type { SummaryLength, VideoMetadata } from '@/types';
 import { extractVideoId } from '@/utils/video';
 import { fetchTranscript, fetchVideoMetadata } from '@/lib/transcript';
 import { getAnthropicClient } from '@/lib/claude';
@@ -13,6 +13,8 @@ import {
   SUMMARY_LENGTH_CONFIG,
   DEFAULT_SUMMARY_LENGTH,
   VALID_LENGTHS,
+  CACHE_TTL_MS,
+  CACHE_MAX_SIZE,
 } from '@/constants';
 
 export const runtime = 'nodejs';
@@ -38,6 +40,31 @@ function isRateLimited(ip: string): boolean {
   recent.push(now);
   requestLog.set(ip, recent);
   return recent.length > RATE_LIMIT_MAX_REQUESTS;
+}
+
+interface CacheEntry {
+  metadata: VideoMetadata | null;
+  summary: string;
+  createdAt: number;
+}
+
+const summaryCache = new Map<string, CacheEntry>();
+
+function cleanupCache() {
+  const now = Date.now();
+  for (const [key, entry] of summaryCache) {
+    if (now - entry.createdAt > CACHE_TTL_MS) {
+      summaryCache.delete(key);
+    }
+  }
+  // If still over limit after TTL eviction, remove oldest entries
+  if (summaryCache.size > CACHE_MAX_SIZE) {
+    const sorted = [...summaryCache.entries()].sort((a, b) => a[1].createdAt - b[1].createdAt);
+    const toRemove = sorted.slice(0, summaryCache.size - CACHE_MAX_SIZE);
+    for (const [key] of toRemove) {
+      summaryCache.delete(key);
+    }
+  }
 }
 
 function parseSummaryLength(raw: unknown): SummaryLength {
@@ -84,6 +111,23 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Check cache before fetching transcript or calling Claude
+    const cacheKey = `${videoId}:${length}`;
+    const cached = summaryCache.get(cacheKey);
+    if (cached && Date.now() - cached.createdAt < CACHE_TTL_MS) {
+      // Streaming protocol: first newline-delimited line is JSON metadata,
+      // remaining bytes are the summary text (parsed by useSummarize hook)
+      const encoder = new TextEncoder();
+      const metadataLine = JSON.stringify(cached.metadata ?? {}) + '\n';
+      const responseBody = encoder.encode(metadataLine + cached.summary);
+      return new Response(responseBody, {
+        headers: {
+          'Content-Type': 'text/plain; charset=utf-8',
+          'X-Content-Type-Options': 'nosniff',
+        },
+      });
+    }
+
     const [transcriptResult, metadata] = await Promise.all([
       fetchTranscript(videoId),
       fetchVideoMetadata(videoId),
@@ -117,6 +161,7 @@ export async function POST(request: NextRequest) {
     // remaining bytes are the streamed LLM summary text (parsed by useSummarize hook)
     const encoder = new TextEncoder();
     const metadataLine = JSON.stringify(metadata ?? {}) + '\n';
+    const summaryChunks: string[] = [];
     const readableStream = new ReadableStream({
       async start(controller) {
         try {
@@ -126,9 +171,17 @@ export async function POST(request: NextRequest) {
               event.type === 'content_block_delta' &&
               event.delta.type === 'text_delta'
             ) {
+              summaryChunks.push(event.delta.text);
               controller.enqueue(encoder.encode(event.delta.text));
             }
           }
+          // Store completed summary in cache
+          summaryCache.set(cacheKey, {
+            metadata,
+            summary: summaryChunks.join(''),
+            createdAt: Date.now(),
+          });
+          cleanupCache();
           controller.close();
         } catch (err) {
           controller.error(err);
