@@ -5,7 +5,8 @@ import ReactMarkdown from 'react-markdown';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { COPY_FEEDBACK_DURATION_MS, DOWNLOAD_FILENAME_PREFIX } from '@/constants';
 import { DocumentIcon, CopyIcon, CheckIcon, DownloadIcon, ShareIcon } from '@/components/Icons';
-import type { SummaryLength } from '@/types';
+import type { SummaryLength, SummaryLanguage } from '@/types';
+import { DEFAULT_SUMMARY_LANGUAGE } from '@/constants';
 import styles from './SummaryCard.module.css';
 
 const TIMESTAMP_REGEX = /\[(\d{1,2}:\d{2}(?::\d{2})?)\]/g;
@@ -110,9 +111,10 @@ interface SummaryCardProps {
   isLoading: boolean;
   videoId?: string;
   length?: SummaryLength;
+  language?: SummaryLanguage;
 }
 
-export function SummaryCard({ summary, isLoading, videoId, length }: SummaryCardProps) {
+export function SummaryCard({ summary, isLoading, videoId, length, language }: SummaryCardProps) {
   const [copied, setCopied] = useState(false);
   const [showPulse, setShowPulse] = useState(false);
   const [shared, setShared] = useState(false);
@@ -153,12 +155,13 @@ export function SummaryCard({ summary, isLoading, videoId, length }: SummaryCard
     if (!videoId) return;
     const params = new URLSearchParams({ v: videoId });
     if (length) params.set('length', length);
+    if (language && language !== DEFAULT_SUMMARY_LANGUAGE) params.set('lang', language);
     const shareUrl = `${window.location.origin}/?${params.toString()}`;
     await copyToClipboard(shareUrl);
     if (shareTimeoutRef.current) clearTimeout(shareTimeoutRef.current);
     setShared(true);
     shareTimeoutRef.current = setTimeout(() => setShared(false), COPY_FEEDBACK_DURATION_MS);
-  }, [videoId, length]);
+  }, [videoId, length, language]);
 
   const showActions = summary && !isLoading;
 

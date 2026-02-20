@@ -1,8 +1,8 @@
 import Image from "next/image";
 import SummarizerForm from "@/components/SummarizerForm";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import type { SummaryLength } from "@/types";
-import { VALID_LENGTHS } from "@/constants";
+import type { SummaryLength, SummaryLanguage } from "@/types";
+import { VALID_LENGTHS, VALID_LANGUAGES } from "@/constants";
 
 interface PageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -14,6 +14,10 @@ export default async function Home({ searchParams }: PageProps) {
   const lengthParam = typeof params.length === 'string' ? params.length : undefined;
   const length = lengthParam && VALID_LENGTHS.includes(lengthParam as SummaryLength)
     ? (lengthParam as SummaryLength)
+    : undefined;
+  const langParam = typeof params.lang === 'string' ? params.lang : undefined;
+  const language = langParam && VALID_LANGUAGES.includes(langParam as SummaryLanguage)
+    ? (langParam as SummaryLanguage)
     : undefined;
   return (
     <div className="page-wrapper">
@@ -45,7 +49,7 @@ export default async function Home({ searchParams }: PageProps) {
 
         {/* Main Card */}
         <div className="glass-card w-full max-w-4xl mx-auto p-5 sm:p-6 animate-fade-up-delay-2">
-          <SummarizerForm initialVideoId={videoId} initialLength={length} />
+          <SummarizerForm initialVideoId={videoId} initialLength={length} initialLanguage={language} />
         </div>
 
         <footer className="mt-8 text-center animate-fade-up-delay-3">

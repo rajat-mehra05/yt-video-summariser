@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import type { SummaryLength, VideoMetadata } from '@/types';
+import type { SummaryLength, SummaryLanguage, VideoMetadata } from '@/types';
 import { API_SUMMARIZE_ENDPOINT } from '@/constants';
 
 interface UseSummarizeReturn {
@@ -9,7 +9,7 @@ interface UseSummarizeReturn {
   isLoading: boolean;
   error: string | null;
   metadata: VideoMetadata | null;
-  submitUrl: (url: string, length: SummaryLength) => void;
+  submitUrl: (url: string, length: SummaryLength, language: SummaryLanguage) => void;
 }
 
 function parseMetadataLine(line: string): VideoMetadata | null {
@@ -35,7 +35,7 @@ export function useSummarize(): UseSummarizeReturn {
     };
   }, []);
 
-  const submitUrl = useCallback(async (url: string, length: SummaryLength) => {
+  const submitUrl = useCallback(async (url: string, length: SummaryLength, language: SummaryLanguage) => {
     setSummary('');
     setError(null);
     setMetadata(null);
@@ -49,7 +49,7 @@ export function useSummarize(): UseSummarizeReturn {
       const response = await fetch(API_SUMMARIZE_ENDPOINT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ videoId: url, length }),
+        body: JSON.stringify({ videoId: url, length, language }),
         signal: abortController.signal,
       });
 
