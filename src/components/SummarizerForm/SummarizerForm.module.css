@@ -41,8 +41,8 @@
 
 .button {
   flex-shrink: 0;
-  padding: 10px var(--space-5);
-  font-size: var(--font-size-sm);
+  padding: var(--space-3) var(--space-5);
+  font-size: var(--font-size-base);
   font-weight: 600;
   color: #ffffff;
   background: linear-gradient(135deg, var(--accent-blue-interactive) 0%, var(--accent-blue-interactive-dark) 100%);
@@ -80,7 +80,7 @@
   margin-top: var(--space-5);
 }
 
-@media (max-width: 480px) {
+@media (max-width: 540px) {
   .inputGroup {
     flex-wrap: wrap;
     padding: var(--space-2);

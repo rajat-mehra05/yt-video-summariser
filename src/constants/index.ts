@@ -13,14 +13,27 @@ export const DEFAULT_MODEL = 'claude-sonnet-4-5-20250929';
 export const DEFAULT_TEMPERATURE = 0.7;
 
 // Summary length configuration
-export const SUMMARY_LENGTH_CONFIG: Record<SummaryLength, { maxTokens: number; label: string }> = {
-  short:  { maxTokens: 1024,  label: 'Short' },
-  medium: { maxTokens: 2048,  label: 'Medium' },
-  long:   { maxTokens: 4096,  label: 'Long' },
+export const SUMMARY_LENGTH_CONFIG: Record<SummaryLength, { maxTokens: number; label: string; description: string }> = {
+  short:  { maxTokens: 1024,  label: 'Short',  description: 'Key takeaways' },
+  medium: { maxTokens: 2048,  label: 'Medium', description: 'Balanced summary' },
+  long:   { maxTokens: 4096,  label: 'Long',   description: 'Full detail' },
 };
+
+export const LENGTH_OPTIONS = (Object.entries(SUMMARY_LENGTH_CONFIG) as [SummaryLength, typeof SUMMARY_LENGTH_CONFIG[SummaryLength]][]).map(
+  ([value, config]) => ({ value, label: config.label, description: config.description })
+);
 
 export const DEFAULT_SUMMARY_LENGTH: SummaryLength = 'medium';
 export const VALID_LENGTHS: SummaryLength[] = ['short', 'medium', 'long'];
+
+// Validation messages
+export const VALIDATION_MESSAGES = {
+  INVALID_YOUTUBE_URL: 'Please enter a valid YouTube URL or video ID.',
+} as const;
+
+// UI
+export const COPY_FEEDBACK_DURATION_MS = 2000;
+export const DOWNLOAD_FILENAME_PREFIX = 'yt-summary';
 
 // API
 export const API_SUMMARIZE_ENDPOINT = '/api/summarize';

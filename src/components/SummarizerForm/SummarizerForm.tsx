@@ -4,6 +4,7 @@ import type React from 'react';
 import { useState, useRef, useEffect } from 'react';
 import type { SummaryLength } from '@/types';
 import { extractVideoId } from '@/utils/video';
+import { VALIDATION_MESSAGES } from '@/constants';
 import { useSummarize } from '@/hooks/useSummarize';
 import { VideoIcon, SpinnerIcon } from '@/components/Icons';
 import { ErrorBanner } from '@/components/ErrorBanner';
@@ -34,7 +35,7 @@ export default function SummarizerForm() {
 
     const videoId = extractVideoId(trimmed);
     if (!videoId) {
-      setValidationError('Please enter a valid YouTube URL or video ID.');
+      setValidationError(VALIDATION_MESSAGES.INVALID_YOUTUBE_URL);
       return;
     }
     setValidationError(null);

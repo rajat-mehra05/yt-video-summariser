@@ -1,13 +1,8 @@
 'use client';
 
 import type { SummaryLength } from '@/types';
+import { LENGTH_OPTIONS } from '@/constants';
 import styles from './LengthSelector.module.css';
-
-const OPTIONS: { value: SummaryLength; label: string; description: string }[] = [
-  { value: 'short',  label: 'Short',  description: 'Key takeaways' },
-  { value: 'medium', label: 'Medium', description: 'Balanced summary' },
-  { value: 'long',   label: 'Long',   description: 'Full detail' },
-];
 
 interface LengthSelectorProps {
   value: SummaryLength;
@@ -18,7 +13,7 @@ interface LengthSelectorProps {
 export function LengthSelector({ value, onChange, disabled }: LengthSelectorProps) {
   return (
     <div className={styles.container} role="radiogroup" aria-label="Summary length">
-      {OPTIONS.map((opt) => (
+      {LENGTH_OPTIONS.map((opt) => (
         <button
           key={opt.value}
           type="button"
