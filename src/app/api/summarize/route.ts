@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server';
 import type { SummaryLength } from '@/types';
 import { extractVideoId } from '@/utils/video';
-import { fetchTranscript } from '@/lib/transcript';
+import { fetchTranscript, fetchVideoMetadata } from '@/lib/transcript';
 import { getAnthropicClient } from '@/lib/claude';
 import { getSummarizePrompt } from '@/prompts/summarize';
 import {
@@ -84,7 +84,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { text: transcriptText } = await fetchTranscript(videoId);
+    const [transcriptResult, metadata] = await Promise.all([
+      fetchTranscript(videoId),
+      fetchVideoMetadata(videoId),
+    ]);
+    const { text: transcriptText } = transcriptResult;
 
     if (transcriptText.length > MAX_TRANSCRIPT_LENGTH) {
       return Response.json(
@@ -109,10 +113,14 @@ export async function POST(request: NextRequest) {
       stream: true,
     });
 
+    // Streaming protocol: first newline-delimited line is JSON metadata,
+    // remaining bytes are the streamed LLM summary text (parsed by useSummarize hook)
     const encoder = new TextEncoder();
+    const metadataLine = JSON.stringify(metadata ?? {}) + '\n';
     const readableStream = new ReadableStream({
       async start(controller) {
         try {
+          controller.enqueue(encoder.encode(metadataLine));
           for await (const event of response) {
             if (
               event.type === 'content_block_delta' &&
