@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { COPY_FEEDBACK_DURATION_MS, DOWNLOAD_FILENAME_PREFIX } from '@/constants';
 import { DocumentIcon, CopyIcon, CheckIcon, DownloadIcon } from '@/components/Icons';
 import styles from './SummaryCard.module.css';
 
@@ -42,7 +43,7 @@ export function SummaryCard({ summary, isLoading, videoId }: SummaryCardProps) {
     copyTimeoutRef.current = setTimeout(() => {
       setCopied(false);
       setShowPulse(false);
-    }, 2000);
+    }, COPY_FEEDBACK_DURATION_MS);
   }, [summary]);
 
   const handleDownload = useCallback(() => {
@@ -50,7 +51,7 @@ export function SummaryCard({ summary, isLoading, videoId }: SummaryCardProps) {
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement('a');
     anchor.href = url;
-    anchor.download = videoId ? `yt-summary-${videoId}.md` : 'yt-summary.md';
+    anchor.download = videoId ? `${DOWNLOAD_FILENAME_PREFIX}-${videoId}.md` : `${DOWNLOAD_FILENAME_PREFIX}.md`;
     document.body.appendChild(anchor);
     anchor.click();
     document.body.removeChild(anchor);
