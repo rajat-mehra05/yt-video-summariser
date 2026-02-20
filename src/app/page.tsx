@@ -1,8 +1,20 @@
 import Image from "next/image";
 import SummarizerForm from "@/components/SummarizerForm";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import type { SummaryLength } from "@/types";
+import { VALID_LENGTHS } from "@/constants";
 
-export default function Home() {
+interface PageProps {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}
+
+export default async function Home({ searchParams }: PageProps) {
+  const params = await searchParams;
+  const videoId = typeof params.v === 'string' ? params.v : undefined;
+  const lengthParam = typeof params.length === 'string' ? params.length : undefined;
+  const length = lengthParam && VALID_LENGTHS.includes(lengthParam as SummaryLength)
+    ? (lengthParam as SummaryLength)
+    : undefined;
   return (
     <div className="page-wrapper">
       {/* Background gradient blobs */}
@@ -33,7 +45,7 @@ export default function Home() {
 
         {/* Main Card */}
         <div className="glass-card w-full max-w-4xl mx-auto p-5 sm:p-6 animate-fade-up-delay-2">
-          <SummarizerForm />
+          <SummarizerForm initialVideoId={videoId} initialLength={length} />
         </div>
 
         <footer className="mt-8 text-center animate-fade-up-delay-3">

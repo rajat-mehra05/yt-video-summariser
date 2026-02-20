@@ -4,7 +4,7 @@ import type React from 'react';
 import { useState, useRef, useEffect } from 'react';
 import type { SummaryLength } from '@/types';
 import { extractVideoId } from '@/utils/video';
-import { VALIDATION_MESSAGES } from '@/constants';
+import { VALIDATION_MESSAGES, DEFAULT_SUMMARY_LENGTH } from '@/constants';
 import { useSummarize } from '@/hooks/useSummarize';
 import { VideoIcon, SpinnerIcon } from '@/components/Icons';
 import { ErrorBanner } from '@/components/ErrorBanner';
@@ -13,11 +13,16 @@ import { VideoInfo } from '@/components/VideoInfo';
 import { LengthSelector } from '@/components/LengthSelector';
 import styles from './SummarizerForm.module.css';
 
-export default function SummarizerForm() {
-  const [input, setInput] = useState('');
-  const [length, setLength] = useState<SummaryLength>('medium');
+interface SummarizerFormProps {
+  initialVideoId?: string;
+  initialLength?: SummaryLength;
+}
+
+export default function SummarizerForm({ initialVideoId, initialLength }: SummarizerFormProps) {
+  const [input, setInput] = useState(initialVideoId ?? '');
+  const [length, setLength] = useState<SummaryLength>(initialLength ?? DEFAULT_SUMMARY_LENGTH);
   const [validationError, setValidationError] = useState<string | null>(null);
-  const [currentVideoId, setCurrentVideoId] = useState<string | null>(null);
+  const [currentVideoId, setCurrentVideoId] = useState<string | null>(initialVideoId ?? null);
   const { summary, isLoading, error, metadata, submitUrl } = useSummarize();
   const resultRef = useRef<HTMLDivElement>(null);
   const prevLoadingRef = useRef(false);
@@ -28,6 +33,15 @@ export default function SummarizerForm() {
     }
     prevLoadingRef.current = isLoading;
   }, [isLoading]);
+
+  // Auto-submit when initial params are provided via URL
+  const autoSubmittedRef = useRef(false);
+  useEffect(() => {
+    if (initialVideoId && !autoSubmittedRef.current) {
+      autoSubmittedRef.current = true;
+      submitUrl(initialVideoId, initialLength ?? DEFAULT_SUMMARY_LENGTH);
+    }
+  }, [initialVideoId, initialLength, submitUrl]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -84,7 +98,7 @@ export default function SummarizerForm() {
 
       {(summary || isLoading) ? (
         <div ref={resultRef} tabIndex={-1} className="outline-none">
-          <SummaryCard summary={summary} isLoading={isLoading} videoId={currentVideoId ?? undefined} />
+          <SummaryCard summary={summary} isLoading={isLoading} videoId={currentVideoId ?? undefined} length={length} />
         </div>
       ) : !displayError ? (
         <p className={styles.emptyHint}>Enter a YouTube URL above to get started</p>

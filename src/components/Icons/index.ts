@@ -6,6 +6,7 @@ export {
   CopyIcon,
   CheckIcon,
   DownloadIcon,
+  ShareIcon,
   SunIcon,
   MoonIcon,
 } from './Icons';
