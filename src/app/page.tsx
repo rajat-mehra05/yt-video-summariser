@@ -27,25 +27,26 @@ export default async function Home({ searchParams }: PageProps) {
       <div className="bg-blob bg-blob-3" />
 
       {/* Header */}
-      <header className="relative z-10 flex items-center justify-between max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 animate-fade-up">
-        <div className="logo-wrapper">
-          <Image
-            src="/logo.png"
-            alt="YouTube Video Summariser"
-            width={345}
-            height={100}
-            className="w-auto h-auto max-w-[280px] sm:max-w-[345px]"
-            priority
-          />
+      <header className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 animate-fade-up">
+        <div className="flex items-center justify-between">
+          <div className="logo-wrapper">
+            <Image
+              src="/logo.png"
+              alt="YouTube Video Summariser"
+              width={345}
+              height={100}
+              className="w-auto h-auto max-w-[280px] sm:max-w-[345px]"
+              priority
+            />
+          </div>
+          <ThemeToggle />
         </div>
-        <ThemeToggle />
+        <p className="text-muted font-medium text-base leading-relaxed mt-3 animate-fade-up-delay-1">
+          Paste any YouTube link and get an instant AI-powered summary
+        </p>
       </header>
 
       <main className="relative z-10 px-4 sm:px-6 lg:px-8 pb-10">
-        {/* Tagline */}
-        <p className="text-muted text-base max-w-3xl mx-auto text-center leading-relaxed mb-5 mt-1 animate-fade-up-delay-1">
-          Paste any YouTube link and get an instant AI-powered summary
-        </p>
 
         {/* Main Card */}
         <div className="glass-card w-full max-w-4xl mx-auto p-5 sm:p-6 animate-fade-up-delay-2">

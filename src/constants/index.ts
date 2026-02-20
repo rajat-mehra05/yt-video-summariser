@@ -38,6 +38,7 @@ export const LANGUAGE_OPTIONS: { value: SummaryLanguage; label: string }[] = [
   { value: 'zh', label: 'Chinese (Simplified)' },
   { value: 'hi', label: 'Hindi' },
   { value: 'ar', label: 'Arabic' },
+  { value: 'as', label: 'Assamese' },
 ];
 
 export const DEFAULT_SUMMARY_LANGUAGE: SummaryLanguage = 'en';

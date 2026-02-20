@@ -50,6 +50,9 @@ export function getSummarizePrompt(length: SummaryLength = 'medium', language: S
   let prompt = `${BASE_PROMPT}\n\nLength guideline: ${LENGTH_INSTRUCTIONS[length]}`;
   if (language !== DEFAULT_SUMMARY_LANGUAGE) {
     prompt += `\n\nWrite the entire summary in ${LANGUAGE_NAMES[language]}. Translate everything — section headings, sub-headings, prose, bullet points, and quoted text — into ${LANGUAGE_NAMES[language]}.`;
+    if (language === 'as') {
+      prompt += ` Use pure native Assamese (অসমীয়া) script and vocabulary. Do NOT use Bengali — Assamese has its own distinct script, grammar, and vocabulary.`;
+    }
   }
   return prompt;
 }
