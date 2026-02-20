@@ -90,6 +90,21 @@ function processChildren(children: ReactNode, videoId?: string): ReactNode {
   return children;
 }
 
+async function copyToClipboard(text: string): Promise<void> {
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+  }
+}
+
 interface SummaryCardProps {
   summary: string;
   isLoading: boolean;
@@ -112,18 +127,7 @@ export function SummaryCard({ summary, isLoading, videoId, length }: SummaryCard
   }, []);
 
   const handleCopy = useCallback(async () => {
-    try {
-      await navigator.clipboard.writeText(summary);
-    } catch {
-      const textarea = document.createElement('textarea');
-      textarea.value = summary;
-      textarea.style.position = 'fixed';
-      textarea.style.opacity = '0';
-      document.body.appendChild(textarea);
-      textarea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textarea);
-    }
+    await copyToClipboard(summary);
     if (copyTimeoutRef.current) clearTimeout(copyTimeoutRef.current);
     setCopied(true);
     setShowPulse(true);
@@ -150,19 +154,7 @@ export function SummaryCard({ summary, isLoading, videoId, length }: SummaryCard
     const params = new URLSearchParams({ v: videoId });
     if (length) params.set('length', length);
     const shareUrl = `${window.location.origin}/?${params.toString()}`;
-    try {
-      await navigator.clipboard.writeText(shareUrl);
-    } catch {
-      // Fallback for older browsers
-      const textarea = document.createElement('textarea');
-      textarea.value = shareUrl;
-      textarea.style.position = 'fixed';
-      textarea.style.opacity = '0';
-      document.body.appendChild(textarea);
-      textarea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textarea);
-    }
+    await copyToClipboard(shareUrl);
     if (shareTimeoutRef.current) clearTimeout(shareTimeoutRef.current);
     setShared(true);
     shareTimeoutRef.current = setTimeout(() => setShared(false), COPY_FEEDBACK_DURATION_MS);

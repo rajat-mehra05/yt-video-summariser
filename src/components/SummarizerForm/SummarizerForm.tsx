@@ -22,7 +22,9 @@ export default function SummarizerForm({ initialVideoId, initialLength }: Summar
   const [input, setInput] = useState(initialVideoId ?? '');
   const [length, setLength] = useState<SummaryLength>(initialLength ?? DEFAULT_SUMMARY_LENGTH);
   const [validationError, setValidationError] = useState<string | null>(null);
-  const [currentVideoId, setCurrentVideoId] = useState<string | null>(initialVideoId ?? null);
+  const resolvedInitialVideoId = initialVideoId ? extractVideoId(initialVideoId) : null;
+  const [currentVideoId, setCurrentVideoId] = useState<string | null>(resolvedInitialVideoId);
+  const [currentLength, setCurrentLength] = useState<SummaryLength>(initialLength ?? DEFAULT_SUMMARY_LENGTH);
   const { summary, isLoading, error, metadata, submitUrl } = useSummarize();
   const resultRef = useRef<HTMLDivElement>(null);
   const prevLoadingRef = useRef(false);
@@ -34,14 +36,14 @@ export default function SummarizerForm({ initialVideoId, initialLength }: Summar
     prevLoadingRef.current = isLoading;
   }, [isLoading]);
 
-  // Auto-submit when initial params are provided via URL
+  // Auto-submit when valid initial params are provided via URL
   const autoSubmittedRef = useRef(false);
   useEffect(() => {
-    if (initialVideoId && !autoSubmittedRef.current) {
+    if (resolvedInitialVideoId && !autoSubmittedRef.current) {
       autoSubmittedRef.current = true;
-      submitUrl(initialVideoId, initialLength ?? DEFAULT_SUMMARY_LENGTH);
+      submitUrl(resolvedInitialVideoId, initialLength ?? DEFAULT_SUMMARY_LENGTH);
     }
-  }, [initialVideoId, initialLength, submitUrl]);
+  }, [resolvedInitialVideoId, initialLength, submitUrl]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -55,6 +57,7 @@ export default function SummarizerForm({ initialVideoId, initialLength }: Summar
     }
     setValidationError(null);
     setCurrentVideoId(videoId);
+    setCurrentLength(length);
     submitUrl(videoId, length);
   };
 
@@ -98,7 +101,7 @@ export default function SummarizerForm({ initialVideoId, initialLength }: Summar
 
       {(summary || isLoading) ? (
         <div ref={resultRef} tabIndex={-1} className="outline-none">
-          <SummaryCard summary={summary} isLoading={isLoading} videoId={currentVideoId ?? undefined} length={length} />
+          <SummaryCard summary={summary} isLoading={isLoading} videoId={currentVideoId ?? undefined} length={currentLength} />
         </div>
       ) : !displayError ? (
         <p className={styles.emptyHint}>Enter a YouTube URL above to get started</p>
