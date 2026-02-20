@@ -1,10 +1,9 @@
 import { NextRequest } from 'next/server';
-import type { SummaryLength } from '@/types';
+import type { SummaryLength, VideoMetadata } from '@/types';
 import { extractVideoId } from '@/utils/video';
 import { fetchTranscript, fetchVideoMetadata } from '@/lib/transcript';
 import { getAnthropicClient } from '@/lib/claude';
 import { getSummarizePrompt } from '@/prompts/summarize';
-import type { VideoMetadata } from '@/types';
 import {
   RATE_LIMIT_WINDOW_MS,
   RATE_LIMIT_MAX_REQUESTS,
@@ -52,7 +51,6 @@ interface CacheEntry {
 const summaryCache = new Map<string, CacheEntry>();
 
 function cleanupCache() {
-  if (summaryCache.size <= CACHE_MAX_SIZE) return;
   const now = Date.now();
   for (const [key, entry] of summaryCache) {
     if (now - entry.createdAt > CACHE_TTL_MS) {
@@ -121,8 +119,8 @@ export async function POST(request: NextRequest) {
       // remaining bytes are the summary text (parsed by useSummarize hook)
       const encoder = new TextEncoder();
       const metadataLine = JSON.stringify(cached.metadata ?? {}) + '\n';
-      const body = encoder.encode(metadataLine + cached.summary);
-      return new Response(body, {
+      const responseBody = encoder.encode(metadataLine + cached.summary);
+      return new Response(responseBody, {
         headers: {
           'Content-Type': 'text/plain; charset=utf-8',
           'X-Content-Type-Options': 'nosniff',
@@ -178,12 +176,12 @@ export async function POST(request: NextRequest) {
             }
           }
           // Store completed summary in cache
-          cleanupCache();
           summaryCache.set(cacheKey, {
             metadata,
             summary: summaryChunks.join(''),
             createdAt: Date.now(),
           });
+          cleanupCache();
           controller.close();
         } catch (err) {
           controller.error(err);
