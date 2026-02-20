@@ -57,11 +57,12 @@
   --text-faint: #9ca3af;
   --text-error: #dc2626;
 
-  /* Accents */
+  /* Accents — decorative (h2 bars, bullets, blockquote borders) */
   --accent-blue: #24344d;
   --accent-blue-dark: #18294e;
-  --accent-blue-darker: #1d4ed8;
+  --accent-blue-darker: #1e40af;
   --accent-blue-light: #93c5fd;
+  /* Accents — interactive (CTA button gradient + hover) */
   --accent-blue-interactive: #2563eb;
   --accent-blue-interactive-dark: #1d4ed8;
 
@@ -332,6 +333,13 @@
    Custom Scrollbar
    ======================== */
 @media (pointer: fine) {
+  /* Firefox */
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-primary) transparent;
+  }
+
+  /* WebKit (Chrome, Safari, Edge) */
   ::-webkit-scrollbar {
     width: 8px;
   }
